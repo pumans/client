@@ -1,3 +1,10 @@
-/* You can add global styles to this file, and also import other style files */
+/* Імпортуємо ядро Tailwind v4 */
+@import "tailwindcss";
 
-@import 'tailwindcss';
+/* Налаштовуємо нашу фірмову тему прямо тут */
+@theme {
+  --color-up-green: #1C8B39;
+  --color-up-dark: #19222E;
+  --color-up-light: #F5F5F5;
+  --color-up-accent: #D9822B;
+}
