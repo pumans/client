@@ -1,0 +1,87 @@
+<aside class="flex flex-col gap-6 md:gap-8">
+
+  <div class="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-up-green text-white px-4 py-3">
+      <h3 class="text-[13px] md:text-sm font-bold uppercase tracking-wide">Популярне сьогодні</h3>
+    </div>
+
+    <div class="p-4 md:p-5">
+      <div class="flex flex-col gap-4">
+
+        @for (item of popularToday; track item.title; let isLast = $last) {
+          <a href="#"
+             class="group block"
+             [class.border-b]="!isLast"
+             [class.border-gray-100]="!isLast"
+             [class.pb-4]="!isLast">
+
+            <p class="text-sm md:text-[15px] text-gray-800 font-medium group-hover:text-up-green transition-colors duration-300 mb-1.5 leading-snug">
+              {{ item.title }}
+            </p>
+
+            <div class="flex items-center gap-1.5 text-xs text-gray-400 font-medium">
+              <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                <polyline points="16 7 22 7 22 13"></polyline>
+              </svg>
+              <span>{{ item.views }} переглядів</span>
+            </div>
+
+          </a>
+        }
+
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-up-dark text-white px-4 py-3 border-t-2 border-up-green">
+      <h3 class="text-[13px] md:text-sm font-bold uppercase tracking-wide">Відео</h3>
+    </div>
+
+    <a href="#" class="block relative aspect-video bg-gray-900 flex items-center justify-center group overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800" alt="Відео" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-30 transition-opacity duration-300">
+
+      <div class="relative z-10 text-center text-white flex flex-col items-center">
+        <div class="w-14 h-14 bg-up-green group-hover:bg-white group-hover:text-up-green rounded-full flex items-center justify-center mb-3 transition-colors duration-300 shadow-lg">
+          <svg class="w-6 h-6 ml-1 fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+        <p class="text-sm md:text-base font-semibold tracking-wide">Правові новини</p>
+      </div>
+    </a>
+  </div>
+
+  <div class="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
+    <div class="bg-up-dark text-white px-4 py-3 border-t-2 border-up-green">
+      <h3 class="text-[13px] md:text-sm font-bold uppercase tracking-wide">Календар подій</h3>
+    </div>
+
+    <div class="p-4 md:p-5">
+      <div class="grid grid-cols-7 gap-1 text-center text-[11px] md:text-xs font-medium">
+        <div class="text-gray-400 py-1.5">Пн</div>
+        <div class="text-gray-400 py-1.5">Вт</div>
+        <div class="text-gray-400 py-1.5">Ср</div>
+        <div class="text-gray-400 py-1.5">Чт</div>
+        <div class="text-gray-400 py-1.5">Пт</div>
+        <div class="text-up-dark font-bold py-1.5">Сб</div>
+        <div class="text-up-dark font-bold py-1.5">Нд</div>
+
+        @for (day of days; track day) {
+          <div
+            class="py-1.5 md:py-2 rounded-sm cursor-pointer transition-colors"
+            [class.bg-up-green]="day === activeDay"
+            [class.text-white]="day === activeDay"
+            [class.text-gray-700]="day !== activeDay"
+            [class.hover:bg-up-light]="day !== activeDay"
+            [class.hover:text-up-green]="day !== activeDay"
+          >
+            {{ day }}
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+</aside>

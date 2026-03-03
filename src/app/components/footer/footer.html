@@ -1,0 +1,90 @@
+<footer class="bg-up-dark pt-10 pb-12 mt-12 border-t-4 border-up-green">
+  <div class="max-w-[1200px] mx-auto px-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-8 lg:gap-6 text-gray-400">
+
+      <div>
+        <h4 class="text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 mb-3">
+          Правотворчість
+        </h4>
+        <ul class="flex flex-col gap-1.5 mb-8">
+          @for (link of lawmakingLinks; track link) {
+            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          }
+        </ul>
+
+        <h4 class="text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 mb-3">
+          Правовий погляд
+        </h4>
+        <ul class="flex flex-col gap-1.5">
+          @for (link of legalViewLinks; track link) {
+            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          }
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 mb-3">
+          Правова практика
+        </h4>
+        <ul class="flex flex-col gap-1.5 mb-8">
+          @for (link of practiceLinks; track link) {
+            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          }
+        </ul>
+
+        <h4 class="text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 mb-3">
+          Новини
+        </h4>
+        <ul class="flex flex-col gap-1.5">
+          @for (link of newsLinks; track link) {
+            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          }
+        </ul>
+      </div>
+
+      <div>
+        <a href="#" class="block text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 mb-6 hover:text-up-green transition-colors">
+          Календар
+        </a>
+        <a href="#" class="block text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 hover:text-up-green transition-colors">
+          Відео
+        </a>
+      </div>
+
+      <div class="lg:col-span-2">
+        <p class="text-[12px] leading-relaxed text-gray-400">
+          Використання будь-яких матеріалів, розміщених на порталі "Українське право", дозволяється за умови посилання на
+          <a href="#" class="text-white hover:text-up-green transition-colors underline decoration-gray-600 underline-offset-4">ukrainepravo.com</a>.
+          При копіюванні матеріалів порталу "Українське право" для інтернет-видань обов'язковим є пряме та відкрите для пошукових систем гіперпосилання в першому абзаці на цитовану статтю або новину.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 mb-3">
+          Про Проект
+        </h4>
+        <ul class="flex flex-col gap-1.5 mb-6">
+          @for (link of projectLinks; track link) {
+            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          }
+        </ul>
+
+        <a href="#" class="flex items-center gap-2 mb-8 group">
+          <svg class="w-6 h-6 text-[#2E86AB] group-hover:opacity-80 transition-opacity" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+          <span class="text-[#2E86AB] font-bold text-lg tracking-wider group-hover:opacity-80 transition-opacity">AUSPEX</span>
+        </a>
+
+        <h4 class="text-white text-[13px] font-semibold uppercase tracking-wide text-right lg:text-left mb-3">
+          Партнери
+        </h4>
+        <div class="flex justify-end lg:justify-start">
+          <img src="https://placehold.co/88x31/333333/FFFFFF?text=I.UA" alt="I.UA Counter" class="rounded-sm opacity-80 hover:opacity-100 transition-opacity">
+        </div>
+      </div>
+
+    </div>
+  </div>
+</footer>

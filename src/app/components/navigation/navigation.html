@@ -1,0 +1,85 @@
+<div class="hidden md:block bg-up-dark relative z-30">
+  <div class="max-w-[1200px] mx-auto px-4">
+    <nav class="flex w-full">
+      <ul class="flex w-full m-0 p-0 list-none">
+
+        @for (item of menuItems; track item.name) {
+          <li class="flex-1 text-center relative group">
+            <a [routerLink]="item.link"
+               #rla="routerLinkActive"
+               routerLinkActive
+               [routerLinkActiveOptions]="{exact: item.link === '/'}"
+               [class.border-up-green]="rla.isActive"
+               [class.border-transparent]="!rla.isActive"
+               [class.text-up-green]="rla.isActive"
+               class="w-full border-b-4 px-2 lg:px-4 py-3.5 text-white text-[11px] lg:text-[13px] uppercase tracking-wide transition-all hover:bg-white/10 no-underline whitespace-nowrap flex items-center justify-center gap-1.5 h-full cursor-pointer">
+              {{ item.name }}
+
+              @if (item.subItems) {
+                <svg class="w-3 h-3 fill-current opacity-70 group-hover:opacity-100 transition-transform duration-300 group-hover:-rotate-180" viewBox="0 0 24 24">
+                  <path d="M7 10l5 5 5-5z"/>
+                </svg>
+              }
+            </a>
+
+            @if (item.subItems) {
+              <div class="absolute left-0 top-full w-56 bg-up-dark border-t-2 border-up-green shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 text-left">
+                <ul class="flex flex-col m-0 p-0 list-none">
+                  @for (sub of item.subItems; track sub.name) {
+                    <li>
+                      <a [routerLink]="sub.link"
+                         class="block px-5 py-3.5 text-white text-[11px] lg:text-xs uppercase tracking-wider hover:bg-white/10 hover:text-up-green transition-colors border-b border-gray-700 last:border-b-0">
+                        {{ sub.name }}
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </li>
+        }
+
+      </ul>
+    </nav>
+  </div>
+</div>
+
+@if (isMobileMenuOpen) {
+  <div class="md:hidden absolute top-full left-0 w-full bg-up-light border-b-4 border-up-green shadow-xl z-10 flex flex-col">
+    <div class="p-4 bg-white">
+      <div class="relative w-full flex rounded-[20px] border border-gray-300 overflow-hidden bg-white">
+        <input type="text" placeholder="Пошук по сайту" class="w-full px-4 py-2 text-sm text-gray-700 outline-none">
+        <button class="text-gray-400 px-4 flex items-center justify-center">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+
+    <nav class="bg-up-light overflow-y-auto max-h-[70vh]">
+      <ul class="flex flex-col m-0 p-0 list-none">
+        @for (item of menuItems; track item.name) {
+          <li class="border-b border-gray-200 last:border-b-0">
+            <a [routerLink]="item.link"
+               routerLinkActive="bg-white text-up-green"
+               class="block px-5 py-3.5 text-gray-800 text-[14px] uppercase tracking-wide font-medium">
+              {{ item.name }}
+            </a>
+            @if (item.subItems) {
+              <ul class="bg-gray-50 border-t border-gray-100">
+                @for (sub of item.subItems; track sub.name) {
+                  <li>
+                    <a [routerLink]="sub.link"
+                       routerLinkActive="text-up-green"
+                       class="block px-8 py-2.5 text-gray-600 text-[13px] hover:text-up-green transition-colors">
+                      {{ sub.name }}
+                    </a>
+                  </li>
+                }
+              </ul>
+            }
+          </li>
+        }
+      </ul>
+    </nav>
+  </div>
+}

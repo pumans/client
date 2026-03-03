@@ -1,0 +1,48 @@
+<aside class="space-y-6">
+
+  <div class="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
+
+    <div class="bg-up-dark text-white px-4 py-3 border-t-2 border-up-green">
+      <h3 class="text-[13px] md:text-sm font-bold uppercase tracking-wide">
+        Новини
+      </h3>
+    </div>
+
+    <div class="p-4 md:p-5">
+      <div class="flex flex-col gap-4">
+
+        @for (news of latestNews; track news.title; let isLast = $last) {
+
+          <a href="#"
+             class="group flex gap-3 md:gap-4 text-sm"
+             [class.border-b]="!isLast"
+             [class.border-gray-100]="!isLast"
+             [class.pb-4]="!isLast">
+
+            <div class="flex items-center gap-1.5 text-gray-400 text-xs font-medium whitespace-nowrap mt-0.5">
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+              </svg>
+              <span>{{ news.time }}</span>
+            </div>
+
+            <p class="text-gray-800 font-medium group-hover:text-up-green transition-colors duration-300 leading-snug line-clamp-2">
+              {{ news.title }}
+            </p>
+
+          </a>
+
+        }
+
+      </div>
+    </div>
+
+    <div class="bg-gray-50 border-t border-gray-100 p-3 text-center">
+      <a href="/news" class="text-xs font-bold text-gray-500 hover:text-up-green transition-colors uppercase tracking-wider">
+        Всі новини стрічки
+      </a>
+    </div>
+
+  </div>
+
+</aside>
