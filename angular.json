@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -30,7 +31,7 @@
             "server": "src/main.server.ts",
             "outputMode": "server",
             "security": {
-              "allowedHosts": []
+              "allowedHosts": ["localhost", "127.0.0.1", "*.replit.dev", "*.repl.co"]
             },
             "ssr": {
               "entry": "src/server.ts"
@@ -62,6 +63,11 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "allowedHosts": ["localhost", "127.0.0.1", ".replit.dev", ".repl.co"],
+            "host": "0.0.0.0",
+            "port": 5000
+          },
           "configurations": {
             "production": {
               "buildTarget": "client:build:production"
