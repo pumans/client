@@ -3,8 +3,8 @@
     <nav class="flex w-full">
       <ul class="flex w-full m-0 p-0 list-none min-w-0 justify-between">
 
-        @for (item of menuItems; track item.name) {
-          <li class="flex-shrink-1 min-w-0 text-center relative group">
+        @for (item of menuItems; track item.name; let last = $last) {
+          <li class="flex-shrink-1 min-w-0 text-center relative group" [class.max-[900px]:hidden]="last">
             <a [routerLink]="item.link"
                #rla="routerLinkActive"
                routerLinkActive
