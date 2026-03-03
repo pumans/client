@@ -9,6 +9,15 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Navigation {
   //private menuService = inject(MenuService);
+  public openSubmenuIndex: number | null = null;
+
+  public toggleSubmenu(event: Event, index: number) {
+    if (this.menuItems[index].subItems) {
+      event.preventDefault();
+      this.openSubmenuIndex = this.openSubmenuIndex === index ? null : index;
+    }
+  }
+
   // Пункти меню
   public menuItems = [
     {
