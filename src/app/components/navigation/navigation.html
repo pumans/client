@@ -1,10 +1,10 @@
 <div class="hidden md:block bg-up-dark relative z-30">
   <div class="max-w-[1200px] mx-auto px-4">
     <nav class="flex w-full overflow-hidden">
-      <ul class="flex w-full m-0 p-0 list-none min-w-0">
+      <ul class="flex w-full m-0 p-0 list-none min-w-0 justify-between">
 
         @for (item of menuItems; track item.name) {
-          <li class="flex-shrink-0 text-center relative group">
+          <li class="flex-shrink-1 min-w-0 text-center relative group">
             <a [routerLink]="item.link"
                #rla="routerLinkActive"
                routerLinkActive
@@ -12,7 +12,7 @@
                [class.border-up-green]="rla.isActive"
                [class.border-transparent]="!rla.isActive"
                [class.text-up-green]="rla.isActive"
-               class="w-full border-b-4 px-3 lg:px-4 py-3.5 text-white text-[12px] lg:text-[13px] uppercase tracking-wide transition-all hover:bg-white/10 no-underline whitespace-nowrap flex items-center justify-center h-full cursor-pointer">
+               class="w-full border-b-4 px-1.5 lg:px-2 py-3.5 text-white text-[11px] lg:text-[12px] xl:text-[13px] uppercase tracking-tighter lg:tracking-tight transition-all hover:bg-white/10 no-underline whitespace-nowrap flex items-center justify-center h-full cursor-pointer">
               {{ item.name }}
             </a>
 
