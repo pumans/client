@@ -1,11 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { NewsService } from '../../services/news.service';
+import { Article } from '../../models/article';
+//import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-main-content',
+  standalone: true,
   imports: [],
   templateUrl: './main-content.html',
 })
-export class MainContent {
+export class MainContent implements OnInit {
+  private newsService = inject(NewsService);
+  //public sections: any[] = [];
   public sections = [
     {
       title: 'СУДОВА ПРАКТИКА',
@@ -83,4 +89,9 @@ export class MainContent {
       ],
     },
   ];
+
+  ngOnInit() {
+    // Завантажуємо реальну новину з вашої бази даних
+
+  }
 }

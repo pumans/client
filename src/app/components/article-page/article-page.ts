@@ -1,13 +1,22 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { NewsService } from '../../services/news.service';
+import { Article } from '../../models/article';
 import { SidebarRight } from '../sidebar-right/sidebar-right';
+import { DatePipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-article-page',
-  imports: [RouterLink, SidebarRight],
+  imports: [RouterLink, SidebarRight, DatePipe, CommonModule],
   templateUrl: './article-page.html',
 })
-export class ArticlePage {
+export class ArticlePage implements OnInit {
+  private route = inject(ActivatedRoute);
+  private newsService = inject(NewsService);
+
+  public article: Article | null = null;
+  public isLoading = true;
+
   public tags = [
     'Володимир Зеленський',
     'РНБО',
@@ -41,4 +50,28 @@ export class ArticlePage {
     },
   ];
 
+  ngOnInit() {
+    // Відслідковуємо зміну ID в URL (наприклад, при переході між схожими статтями)
+    this.route.paramMap.subscribe((params) => {
+      const id = Number(params.get('id'));
+      if (id) {
+        this.loadArticle(id);
+      }
+    });
+  }
+
+  private loadArticle(id: number) {
+    this.isLoading = true;
+    this.newsService.getArticleById(id).subscribe({
+      next: (data) => {
+        this.article = data;
+        this.isLoading = false;
+        // Можна також завантажити схожі статті з тієї ж секції
+      },
+      error: (err) => {
+        console.error('Помилка завантаження статті:', err);
+        this.isLoading = false;
+      },
+    });
+  }
 }

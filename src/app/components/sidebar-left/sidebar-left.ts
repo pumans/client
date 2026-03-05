@@ -1,19 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { NewsService } from '../../services/news.service';
+import { Article } from '../../models/article';
+import { RouterLink } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-sidebar-left',
-  imports: [],
+  imports: [RouterLink, DatePipe],
   templateUrl: './sidebar-left.html',
 })
-export class SidebarLeft {
-  public latestNews = [
-    { time: '18:45', title: 'Нові правила оподаткування для ФОП з 2026 року' },
-    { time: '17:30', title: "Верховний Суд роз'яснив порядок стягнення аліментів" },
-    { time: '16:15', title: 'Затверджено зміни до Цивільного кодексу України' },
-    { time: '15:00', title: "Мін'юст запустив електронний реєстр заповітів" },
-    { time: '14:20', title: 'Нові правила реєстрації нерухомості набули чинності' },
-    { time: '13:10', title: 'Конституційний Суд визнав неконституційним закон про...' },
-    { time: '12:00', title: 'Рада адвокатів прийняла нові етичні правила' },
-    { time: '11:30', title: 'Держреєстр юросіб оновив процедуру реєстрації' },
-  ];
+export class SidebarLeft implements OnInit {
+  private newsService = inject(NewsService);
+  public sections: any[] = [];
+
+  ngOnInit() {
+    this.newsService.getLatestNews().subscribe({
+      next: (data: Article[]) => {
+        this.sections = [
+          {
+            title: 'ОСТАННІ НОВИНИ',
+            articles: data, // 'data' вже є масивом з 10 новин
+          },
+        ];
+      },
+      error: (err) => console.error('Помилка завантаження новин:', err),
+    });
+  }
 }

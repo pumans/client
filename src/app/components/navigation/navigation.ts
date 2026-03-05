@@ -1,14 +1,15 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-//import { MenuService } from '../../services/menu.service'; // Ваш сервіс для API
+import { MenuItem } from '../../models/menu-item';
 
 @Component({
   selector: 'app-navigation',
+  standalone: true,
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './navigation.html',
 })
 export class Navigation {
-  //private menuService = inject(MenuService);
+
   // Пункти меню
   public menuItems = [
     {
@@ -89,15 +90,4 @@ export class Navigation {
   ];
   @Input() isMobileMenuOpen = false;
 
-  ngOnInit() {
-    // Отримання категорій або новин з бекенду
-    // this.menuService.getMenuData().subscribe((data) => {
-    //   this.menuItems = data;
-    // });
-  }
-
-  // Функція для завантаження новин конкретного підменю при наведенні
-  public loadSubmenuNews(submenuId: number) {
-    // Логіка запиту...
-  }
 }
