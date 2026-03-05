@@ -41,6 +41,7 @@ export class NewsService {
   }
 
   getArticleById(id: number): Observable<Article> {
-    return this.http.get<Article>(`${this.apiUrl}/news/${id}`);
+    // Додаємо випадковий параметр, щоб обійти кеш браузера (якщо він є)
+    return this.http.get<Article>(`${this.apiUrl}/news/${id}?t=${new Date().getTime()}`);
   }
 }

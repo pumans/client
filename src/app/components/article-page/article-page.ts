@@ -1,18 +1,22 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NewsService } from '../../services/news.service';
 import { Article } from '../../models/article';
 import { SidebarRight } from '../sidebar-right/sidebar-right';
 import { DatePipe, CommonModule } from '@angular/common';
+import { Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-article-page',
   imports: [RouterLink, SidebarRight, DatePipe, CommonModule],
   templateUrl: './article-page.html',
+  standalone: true,
 })
 export class ArticlePage implements OnInit {
   private route = inject(ActivatedRoute);
   private newsService = inject(NewsService);
+  private cdr = inject(ChangeDetectorRef);
+  private routeSub: Subscription | null = null;
 
   public article: Article | null = null;
   public isLoading = true;
@@ -51,19 +55,45 @@ export class ArticlePage implements OnInit {
   ];
 
   ngOnInit() {
-    // Відслідковуємо зміну ID в URL (наприклад, при переході між схожими статтями)
-    this.route.paramMap.subscribe((params) => {
-      const id = Number(params.get('id'));
-      if (id) {
-        this.loadArticle(id);
-      }
-    });
+    this.routeSub = this.route.paramMap
+      .pipe(
+        switchMap((params) => {
+          const id = Number(params.get('id'));
+          console.log('Перехід на новину ID:', id); // Для діагностики
+
+          this.isLoading = true;
+          this.article = null;
+          this.cdr.detectChanges(); // Повідомляємо про початок завантаження
+
+          return this.newsService.getArticleById(id);
+        }),
+      )
+      .subscribe({
+        next: (data) => {
+          console.log('Дані отримано успішно:', data);
+          this.article = data;
+          this.isLoading = false;
+          this.cdr.detectChanges(); // ПРИМУСОВО оновлюємо інтерфейс
+        },
+        error: (err) => {
+          console.error('Помилка завантаження:', err);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        },
+      });
+  }
+  ngOnDestroy() {
+    // Важливо відписатися, щоб не було витоків пам'яті
+    if (this.routeSub) {
+      this.routeSub.unsubscribe();
+    }
   }
 
   private loadArticle(id: number) {
     this.isLoading = true;
     this.newsService.getArticleById(id).subscribe({
       next: (data) => {
+        console.log('Отримані дані статті:', data);
         this.article = data;
         this.isLoading = false;
         // Можна також завантажити схожі статті з тієї ж секції

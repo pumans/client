@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-sidebar-right',
   imports: [],
   templateUrl: './sidebar-right.html',
+  standalone: true,
 })
 export class SidebarRight {
   public popularToday = [
