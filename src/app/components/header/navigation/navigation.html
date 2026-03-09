@@ -2,10 +2,8 @@
   <div class="max-w-[1200px] mx-auto px-4">
     <nav class="flex w-full">
       <ul class="flex w-full m-0 p-0 list-none min-w-0 justify-between">
-
         @for (item of menuItems; track item.name; let last = $last) {
           <li class="flex-shrink-1 min-w-0 text-center relative group" [class.max-[900px]:hidden]="last">
-
             @if (item.subItems) {
               <span class="w-full border-b-4 border-transparent px-1.5 lg:px-2 py-3.5 text-white/90 text-[11px] lg:text-[12px] xl:text-[13px] uppercase tracking-tighter lg:tracking-tight flex items-center justify-center h-full cursor-default select-none">
                 {{ item.name }}
@@ -39,14 +37,15 @@
             }
           </li>
         }
-
       </ul>
     </nav>
   </div>
 </div>
 
 @if (isMobileMenuOpen) {
-  <div class="md:hidden absolute top-full left-0 w-full bg-up-light border-b-4 border-up-green shadow-xl z-10 flex flex-col">
+  <div class="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity" (click)="onClose()"></div>
+
+  <div class="md:hidden absolute top-full left-0 w-full bg-up-light border-b-4 border-up-green shadow-xl z-50 flex flex-col">
     <div class="p-4 bg-white">
       <div class="relative w-full flex rounded-[20px] border border-gray-300 overflow-hidden bg-white">
         <input type="text" placeholder="Пошук по сайту" class="w-full px-4 py-2 text-sm text-gray-700 outline-none">
@@ -67,6 +66,7 @@
               </span>
             } @else {
               <a [routerLink]="item.link"
+                 (click)="onClose()"
                  routerLinkActive="bg-white text-up-green"
                  class="block px-5 py-3.5 text-gray-800 text-[14px] uppercase tracking-wide font-medium">
                 {{ item.name }}
@@ -78,6 +78,7 @@
                 @for (sub of item.subItems; track sub.name) {
                   <li>
                     <a [routerLink]="sub.link"
+                       (click)="onClose()"
                        routerLinkActive="text-up-green"
                        class="block px-8 py-2.5 text-gray-600 text-[13px] hover:text-up-green transition-colors">
                       {{ sub.name }}

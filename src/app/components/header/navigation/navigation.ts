@@ -1,6 +1,5 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { MenuItem } from '../../../models/menu-item';
 
 @Component({
   selector: 'app-navigation',
@@ -88,4 +87,9 @@ export class Navigation {
     },
   ];
   @Input() isMobileMenuOpen = false;
+  @Output() closeMenu = new EventEmitter<void>();
+
+  onClose() {
+    this.closeMenu.emit();
+  }
 }

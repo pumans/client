@@ -3,6 +3,8 @@ import { Home } from './components/home/home';
 import { ArticlePage } from './components/pages/article-page/article-page';
 import { EditorColumnPage } from './components/pages/editor-column-page/editor-column-page';
 import { CategoryPageComponent } from './components/pages/category-page/category-page'; // Ваш новий універсальний компонент
+import { VideoPageComponent } from './components/pages/video-page/video-page';
+import { VideoArticlePageComponent } from './components/pages/video-article-page/video-article-page';
 
 export const routes: Routes = [
   // 1. Точні статичні маршрути (перевіряються першими)
@@ -11,6 +13,11 @@ export const routes: Routes = [
 
   // 2. Сторінка конкретної статті
   { path: 'article/:id', component: ArticlePage },
+
+  // --- НОВІ МАРШРУТИ ДЛЯ ВІДЕО ---
+  { path: 'video-article/:id', component: VideoArticlePageComponent },
+  // Ловимо запити на кшталт video/legal_dialogue
+  { path: 'video/:subcategory', component: VideoPageComponent },
 
   // 3. Універсальні динамічні маршрути для ВСІХ категорій меню
   // Обробляє шляхи типу: /news/ukraine, /law-making/bill_under_consideration

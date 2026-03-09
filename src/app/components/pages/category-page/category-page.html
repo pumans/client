@@ -1,33 +1,87 @@
-<div class="px-4 py-6 md:px-8 md:py-10 lg:px-12">
-  <h1 class="text-xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 uppercase border-b-2 border-blue-600 pb-2 inline-block">
-    {{ displayTitle }}
+<div class="px-4 py-6 md:px-8 md:py-10 lg:px-12 max-w-[1200px] mx-auto">
+  <h1 class="text-xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 uppercase border-b-2 border-up-green pb-2 inline-block">
+    {{ displayTitle() }}
   </h1>
 
-  @if (loading) {
+  @if (loading()) {
     <div class="flex justify-center items-center py-10">
-      <div class="w-8 h-8 md:w-12 md:h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+      <div class="w-8 h-8 md:w-12 md:h-12 border-4 border-gray-200 border-t-up-green rounded-full animate-spin"></div>
     </div>
-  } @else if (articles.length > 0) {
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-      @for (article of articles; track article.id) {
-        <article class="flex flex-col bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100">
-          <img [src]="'http://127.0.0.1:3000' + article.imageUrl" [alt]="article.title" class="w-full h-48 md:h-56 lg:h-64 object-cover">
+  }
+  @else if (articles().length > 0) {
 
-          <div class="p-4 md:p-5 flex flex-col flex-grow">
-            <h2 class="text-base md:text-lg lg:text-xl font-semibold text-gray-800 leading-tight mb-3">
-              {{ article.title }}
-            </h2>
+    @switch (viewMode()) {
 
-            <div class="mt-auto flex justify-between items-center text-xs md:text-sm text-gray-500">
-              <span>{{ article.date | date:'dd.MM.yyyy' }}</span>
-              <a [routerLink]="['/article', article.id]" class="text-blue-600 font-medium hover:underline">
-                Читати далі
-              </a>
-            </div>
-          </div>
-        </article>
+      @case ('text') {
+        <div class="flex flex-col gap-4 md:gap-6">
+          @for (article of articles(); track article.id) {
+            <article class="bg-white rounded-lg shadow-sm border border-gray-100 p-5 md:p-6 hover:shadow-md transition-shadow">
+              <div class="flex items-center gap-2 text-xs md:text-sm text-gray-500 mb-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <span>{{ article.date | date:'dd.MM.yyyy' }}</span>
+              </div>
+              <h2 class="text-lg md:text-xl font-bold text-gray-800 leading-snug mb-3">
+                <a [routerLink]="['/article', article.id]" class="hover:text-up-green transition-colors">
+                  {{ article.title }}
+                </a>
+              </h2>
+              <p class="text-gray-600 text-sm md:text-base line-clamp-3" [innerHTML]="article.summary"></p>
+            </article>
+          }
+        </div>
       }
-    </div>
+
+      @case ('persons') {
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          @for (article of articles(); track article.id) {
+            <article class="flex flex-col bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 text-center">
+              <a [routerLink]="['/article', article.id]" class="block overflow-hidden aspect-[3/4] bg-gray-100">
+                <img [src]="article.imageUrl ? 'http://127.0.0.1:3000' + article.imageUrl : '/assets/placeholder.jpg'"
+                     [alt]="article.title"
+                     class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500">
+              </a>
+              <div class="p-4 flex flex-col flex-grow">
+                <h2 class="text-sm md:text-base font-bold text-gray-800 leading-tight mb-2">
+                  <a [routerLink]="['/article', article.id]" class="hover:text-up-green transition-colors">
+                    {{ article.title }}
+                  </a>
+                </h2>
+                <div class="mt-auto text-xs text-gray-500">{{ article.date | date:'dd.MM.yyyy' }}</div>
+              </div>
+            </article>
+          }
+        </div>
+      }
+
+      @default {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          @for (article of articles(); track article.id) {
+            <article class="flex flex-col bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100">
+              <a [routerLink]="['/article', article.id]" class="block overflow-hidden aspect-[4/3]">
+                <img [src]="article.imageUrl ? 'http://127.0.0.1:3000' + article.imageUrl : '/assets/placeholder.jpg'" [alt]="article.title" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+              </a>
+              <div class="p-4 md:p-5 flex flex-col flex-grow">
+                <h2 class="text-base md:text-lg lg:text-xl font-bold text-gray-800 leading-tight mb-3">
+                  <a [routerLink]="['/article', article.id]" class="hover:text-up-green transition-colors">
+                    {{ article.title }}
+                  </a>
+                </h2>
+                <div class="mt-auto flex justify-between items-center text-xs md:text-sm text-gray-500">
+                  <span>{{ article.date | date:'dd.MM.yyyy' }}</span>
+                  <a [routerLink]="['/article', article.id]" class="text-up-green font-medium hover:underline">
+                    Читати далі
+                  </a>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      }
+
+    }
+
   } @else {
     <div class="bg-gray-50 text-center py-12 md:py-20 rounded-lg">
       <p class="text-gray-500 text-sm md:text-base">У цьому розділі поки немає публікацій.</p>
