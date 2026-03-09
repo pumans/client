@@ -1,22 +1,13 @@
 import { Component } from '@angular/core';
+import { EditorColumnWidget } from './editor-column-widget/editor-column-widget';
+import { PopularTodayWidget } from './popular-today-widget/popular-today-widget';
+import { VideoWidget } from './video-widget/video-widget';
+import { EventsCalendarWidget } from './events-calendar-widget/events-calendar-widget';
 
 @Component({
   selector: 'app-sidebar-right',
-  imports: [],
+  imports: [EditorColumnWidget, PopularTodayWidget, VideoWidget, EventsCalendarWidget],
   templateUrl: './sidebar-right.html',
   standalone: true,
 })
-export class SidebarRight {
-  public popularToday = [
-    { title: 'Як правильно скласти позовну заяву до суду', views: '12.5K' },
-    { title: 'Трудові права при звільненні: повний гід', views: '9.8K' },
-    { title: 'Податкова декларація 2026: покрокова інструкція', views: '8.2K' },
-    { title: 'Спадкування нерухомості: що важливо знати', views: '7.1K' },
-  ];
-
-  // Створюємо масив з числами від 1 до 31 для календаря
-  public days = Array.from({ length: 31 }, (_, i) => i + 1);
-
-  // Активний день у календарі
-  public activeDay = 26;
-}
+export class SidebarRight {}

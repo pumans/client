@@ -1,0 +1,36 @@
+<div class="px-4 py-6 md:px-8 md:py-10 lg:px-12">
+  <h1 class="text-xl md:text-3xl font-bold text-gray-900 mb-6 md:mb-8 uppercase border-b-2 border-blue-600 pb-2 inline-block">
+    {{ displayTitle }}
+  </h1>
+
+  @if (loading) {
+    <div class="flex justify-center items-center py-10">
+      <div class="w-8 h-8 md:w-12 md:h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+    </div>
+  } @else if (articles.length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      @for (article of articles; track article.id) {
+        <article class="flex flex-col bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100">
+          <img [src]="'http://127.0.0.1:3000' + article.imageUrl" [alt]="article.title" class="w-full h-48 md:h-56 lg:h-64 object-cover">
+
+          <div class="p-4 md:p-5 flex flex-col flex-grow">
+            <h2 class="text-base md:text-lg lg:text-xl font-semibold text-gray-800 leading-tight mb-3">
+              {{ article.title }}
+            </h2>
+
+            <div class="mt-auto flex justify-between items-center text-xs md:text-sm text-gray-500">
+              <span>{{ article.date | date:'dd.MM.yyyy' }}</span>
+              <a [routerLink]="['/article', article.id]" class="text-blue-600 font-medium hover:underline">
+                Читати далі
+              </a>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="bg-gray-50 text-center py-12 md:py-20 rounded-lg">
+      <p class="text-gray-500 text-sm md:text-base">У цьому розділі поки немає публікацій.</p>
+    </div>
+  }
+</div>

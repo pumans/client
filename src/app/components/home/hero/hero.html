@@ -3,13 +3,13 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
 
-      @for (article of featuredArticles; track article.title) {
+      @for (article of featuredArticles(); track article.title) {
 
-        <a [routerLink]="['/news', article.id]" class="group relative overflow-hidden rounded bg-up-dark block">
+        <a [routerLink]="['/article', article.id]" class="group relative overflow-hidden rounded bg-up-dark block">
 
           <div class="aspect-video relative overflow-hidden">
             <img
-              [src]="article.image"
+              [src]="'http://127.0.0.1:3000' + article.image"
               [alt]="article.title"
               class="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
             />

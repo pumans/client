@@ -1,6 +1,6 @@
 import { Component, Input, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { MenuItem } from '../../models/menu-item';
+import { MenuItem } from '../../../models/menu-item';
 
 @Component({
   selector: 'app-navigation',
@@ -9,7 +9,6 @@ import { MenuItem } from '../../models/menu-item';
   templateUrl: './navigation.html',
 })
 export class Navigation {
-
   // Пункти меню
   public menuItems = [
     {
@@ -50,7 +49,7 @@ export class Navigation {
         { name: 'КОМПАНІЙ', link: '/news/companies' },
       ],
     },
-    { name: 'КАЛЕНДАР ПОДІЙ', link: '/events' },
+    // { name: 'КАЛЕНДАР ПОДІЙ', link: '/events' },
     {
       name: 'МІЖНАРОДНЕ ПРАВО',
       link: '/international_law',
@@ -89,5 +88,4 @@ export class Navigation {
     },
   ];
   @Input() isMobileMenuOpen = false;
-
 }

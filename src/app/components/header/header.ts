@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Navigation } from '../navigation/navigation';
+import { Navigation } from './navigation/navigation';
 
 
 @Component({

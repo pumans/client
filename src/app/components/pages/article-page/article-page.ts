@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NewsService } from '../../services/news.service';
-import { Article } from '../../models/article';
-import { SidebarRight } from '../sidebar-right/sidebar-right';
+import { NewsService } from '../../../services/news.service';
+import { Article } from '../../../models/article';
+import { SidebarRight } from '../../sidebar-right/sidebar-right';
 import { DatePipe, CommonModule } from '@angular/common';
-import { Subscription, switchMap } from 'rxjs';
+import { of, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-article-page',
@@ -58,8 +58,20 @@ export class ArticlePage implements OnInit {
     this.routeSub = this.route.paramMap
       .pipe(
         switchMap((params) => {
-          const id = Number(params.get('id'));
+          const rawId = params.get('id');
+          const id = Number(rawId);
           console.log('Перехід на новину ID:', id); // Для діагностики
+
+          // Якщо id не число (наприклад, маршрут /news/ukraine),
+          // не робимо HTTP-запит, щоб не викликати помилок та PendingTasks.
+          if (!rawId || Number.isNaN(id)) {
+            console.warn('Некоректний ID новини в маршруті:', rawId);
+            this.isLoading = false;
+            this.article = null;
+            this.cdr.detectChanges();
+            // Повертаємо observable, який емiтить null і одразу завершується.
+            return of(null as any);
+          }
 
           this.isLoading = true;
           this.article = null;
@@ -70,7 +82,6 @@ export class ArticlePage implements OnInit {
       )
       .subscribe({
         next: (data) => {
-          console.log('Дані отримано успішно:', data);
           this.article = data;
           this.isLoading = false;
           this.cdr.detectChanges(); // ПРИМУСОВО оновлюємо інтерфейс
