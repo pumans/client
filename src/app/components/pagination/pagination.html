@@ -1,0 +1,44 @@
+<div class="flex flex-col md:flex-row justify-center items-center gap-6 mt-10">
+
+  <div class="inline-flex items-center gap-2.5 text-[13px] text-gray-500 dark:text-gray-400 font-medium">
+    <span>Показувати по</span>
+    <div class="relative group">
+      <select
+        (change)="onPageSizeChange($any($event.target).value)"
+        class="appearance-none pl-4 pr-10 py-1.5 rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 text-[13px] outline-none cursor-pointer hover:border-up-green dark:hover:border-up-green focus:ring-1 focus:ring-up-green transition-all bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%239ca3af%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[position:right_0.6rem_center] bg-no-repeat bg-[length:1.25rem_1.25rem]"
+      >
+        @for (opt of pageSizeOptions; track opt) {
+          <option
+            [value]="opt"
+            [selected]="opt === pageSize()"
+            class="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
+          >
+            {{ opt }}
+          </option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <button (click)="onPrev()" [disabled]="currentPage() === 1"
+            class="px-4 py-1.5 text-[13px] rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 cursor-pointer transition-all hover:border-up-green hover:text-up-green disabled:opacity-30">
+      ‹ Попередня
+    </button>
+
+    <div class="inline-flex gap-1.5">
+      @for (p of visiblePages(); track p) {
+        <button (click)="goToPage(p)"
+                class="min-w-[34px] h-[34px] rounded-full border text-[13px] transition-all flex items-center justify-center cursor-pointer font-bold"
+                [class]="p === currentPage() ? 'border-up-green bg-up-green text-white shadow-sm' : 'border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-up-green'">
+          {{ p }}
+        </button>
+      }
+    </div>
+
+    <button (click)="onNext()" [disabled]="!hasNextPage()"
+            class="px-4 py-1.5 text-[13px] rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 cursor-pointer transition-all hover:border-up-green hover:text-up-green disabled:opacity-30">
+      Наступна ›
+    </button>
+  </div>
+</div>

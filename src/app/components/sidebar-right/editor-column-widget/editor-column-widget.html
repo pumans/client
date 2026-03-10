@@ -1,0 +1,40 @@
+<section class="flex flex-col">
+
+  <div class="mb-4 lg:mb-5 border-b-2 border-gray-900 dark:border-gray-100 pb-2">
+    <a
+      routerLink="/editor_column"
+      class="font-bold text-gray-900 dark:text-gray-100 text-[14px] md:text-[15px] uppercase tracking-wide hover:text-up-green dark:hover:text-up-green transition-colors cursor-pointer"
+    >
+      Колонка редактора
+    </a>
+  </div>
+
+  <div class="flex flex-col">
+    @if (isLoading()) {
+      <div class="text-[13px] md:text-sm text-gray-500 dark:text-gray-400 animate-pulse">Завантаження...</div>
+    } @else if (error()) {
+      <div class="text-[13px] md:text-sm text-red-600 dark:text-red-400">{{ error() }}</div>
+    } @else if (latest(); as item) {
+      <a
+        [routerLink]="['/article', item.id]"
+        class="group flex items-start gap-4 transition-colors duration-300"
+      >
+        <div class="mt-1 flex-shrink-0 w-20 h-20 overflow-hidden bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
+          <img
+            [src]="item.imageUrl ? 'http://127.0.0.1:3000' + item.imageUrl : 'assets/placeholder-person.jpg'"
+            [alt]="item.title"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+        </div>
+
+        <div class="flex flex-col">
+          <span class="ext-[16px] md:text-[18px] lg:text-[19px] font-semibold text-gray-900 dark:text-gray-200 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug line-clamp-3">
+            {{ item.title }}
+          </span>
+        </div>
+      </a>
+    } @else {
+      <div class="text-[13px] md:text-sm text-gray-500 dark:text-gray-400">Поки що немає матеріалів.</div>
+    }
+  </div>
+
+</section>

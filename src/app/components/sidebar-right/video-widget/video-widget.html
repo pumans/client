@@ -1,0 +1,76 @@
+<section class="flex flex-col gap-8">
+
+  @if (widgetData(); as data) {
+
+    @if (data.dialogueVideo) {
+      <div class="flex flex-col">
+
+        <div class="mb-4 lg:mb-5 border-b-2 border-gray-900 dark:border-gray-100 pb-2">
+          <h3 class="font-bold text-gray-900 dark:text-gray-100 text-[14px] md:text-[15px] uppercase tracking-wide">
+            Діалоги про право
+          </h3>
+        </div>
+
+        <a [routerLink]="['/video-article', data.dialogueVideo.id]" class="group flex flex-col gap-3 transition-colors duration-300">
+
+          <div class="relative aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">
+            <img [src]="getYoutubeThumbnail(data.dialogueVideo.videoLink)"
+                 [alt]="data.dialogueVideo.title"
+                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-12 h-12 bg-up-green group-hover:bg-white text-white group-hover:text-up-green rounded-full flex items-center justify-center transition-colors duration-300 shadow-md">
+                <svg class="w-5 h-5 ml-1 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="ext-[16px] md:text-[18px] lg:text-[20px] font-semibold text-gray-900 dark:text-gray-200 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug line-clamp-3" [title]="data.dialogueVideo.title">
+            {{ data.dialogueVideo.title }}
+          </h3>
+
+        </a>
+      </div>
+    }
+
+    @if (data.otherVideo) {
+      <div class="flex flex-col pt-2">
+
+        <div class="mb-4 lg:mb-5 border-b-2 border-gray-900 dark:border-gray-100 pb-2">
+          <h3 class="font-bold text-gray-900 dark:text-gray-100 text-[14px] md:text-[15px] uppercase tracking-wide">
+            Відео
+          </h3>
+        </div>
+
+        <a [routerLink]="['/video-article', data.otherVideo.id]" class="group flex flex-col gap-3 transition-colors duration-300">
+
+          <div class="relative aspect-video overflow-hidden bg-gray-100 dark:bg-gray-800">
+            <img [src]="getYoutubeThumbnail(data.otherVideo.videoLink)"
+                 [alt]="data.otherVideo.title"
+                 class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-300"></div>
+
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="w-12 h-12 bg-up-green group-hover:bg-white text-white group-hover:text-up-green rounded-full flex items-center justify-center transition-colors duration-300 shadow-md">
+                <svg class="w-5 h-5 ml-1 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="ext-[16px] md:text-[18px] lg:text-[20px] font-semibold text-gray-900 dark:text-gray-200 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug line-clamp-3" [title]="data.otherVideo.title">
+            {{ data.otherVideo.title }}
+          </h3>
+
+        </a>
+      </div>
+    }
+
+  } @else {
+    <div class="flex items-center justify-center py-12">
+      <div class="w-8 h-8 border-2 border-gray-200 dark:border-gray-700 border-t-up-green rounded-full animate-spin"></div>
+    </div>
+  }
+</section>

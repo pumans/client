@@ -1,0 +1,31 @@
+<section class="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
+  <div class="bg-up-dark text-white px-4 py-3 border-t-2 border-up-green">
+    <h3 class="text-[13px] md:text-sm font-bold uppercase tracking-wide">Календар подій</h3>
+  </div>
+
+  <div class="p-4 md:p-5">
+    <div class="grid grid-cols-7 gap-1 text-center text-[11px] md:text-xs font-medium">
+      <div class="text-gray-400 py-1.5">Пн</div>
+      <div class="text-gray-400 py-1.5">Вт</div>
+      <div class="text-gray-400 py-1.5">Ср</div>
+      <div class="text-gray-400 py-1.5">Чт</div>
+      <div class="text-gray-400 py-1.5">Пт</div>
+      <div class="text-up-dark font-bold py-1.5">Сб</div>
+      <div class="text-up-dark font-bold py-1.5">Нд</div>
+
+      @for (day of days; track day) {
+        <div
+          class="py-1.5 md:py-2 rounded-sm cursor-pointer transition-colors"
+          [class.bg-up-green]="day === activeDay"
+          [class.text-white]="day === activeDay"
+          [class.text-gray-700]="day !== activeDay"
+          [class.hover:bg-up-light]="day !== activeDay"
+          [class.hover:text-up-green]="day !== activeDay"
+        >
+          {{ day }}
+        </div>
+      }
+    </div>
+  </div>
+</section>
+

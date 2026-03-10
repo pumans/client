@@ -1,0 +1,32 @@
+<section class="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
+  <div class="bg-up-green text-white px-4 py-3">
+    <h3 class="text-[13px] md:text-sm font-bold uppercase tracking-wide">Популярне сьогодні</h3>
+  </div>
+
+  <div class="p-4 md:p-5">
+    <div class="flex flex-col gap-4">
+      @for (item of popularToday; track item.title; let isLast = $last) {
+        <a
+          href="#"
+          class="group block"
+          [class.border-b]="!isLast"
+          [class.border-gray-100]="!isLast"
+          [class.pb-4]="!isLast"
+        >
+          <p class="text-sm md:text-[15px] text-gray-800 font-medium group-hover:text-up-green transition-colors duration-300 mb-1.5 leading-snug">
+            {{ item.title }}
+          </p>
+
+          <div class="flex items-center gap-1.5 text-xs text-gray-400 font-medium">
+            <svg class="w-3.5 h-3.5 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+              <polyline points="16 7 22 7 22 13"></polyline>
+            </svg>
+            <span>{{ item.views }} переглядів</span>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
+

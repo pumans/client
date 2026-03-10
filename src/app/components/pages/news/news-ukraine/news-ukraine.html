@@ -1,0 +1,57 @@
+<section class="max-w-[1200px] mx-auto my-5 px-4">
+  <h1 class="text-3xl font-bold mb-5">Новини України</h1>
+
+  @if (isLoading) {
+    <div class="p-5 text-center text-gray-500">Завантаження...</div>
+  }
+
+  @if (!isLoading && error) {
+    <div class="p-5 text-center text-red-600">{{ error }}</div>
+  }
+
+  @if (!isLoading && !error && items?.length === 0) {
+    <div class="p-5 text-center text-gray-500">
+      Наразі немає новин у цій категорії.
+    </div>
+  }
+
+  @if (!isLoading && !error && items?.length) {
+    <div class="p-6">
+      <div class="space-y-6">
+        @for (item of items; track item.id) {
+          <article
+            class="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0"
+          >
+          <!-- Time and Date -->
+          <div class="flex items-center gap-4 mb-3 flex-wrap">
+            <div class="flex items-center gap-2 text-sm text-gray-500">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span class="font-medium">{{ item.time ?? (item.date | date:'shortTime') }}</span>
+            </div>
+            <span class="text-sm text-gray-400">{{ item.date | date:'dd.MM.yyyy' }}</span>
+          </div>
+
+          <!-- Title -->
+          <a [routerLink]="['/news', item.id]" class="block group">
+            <h3 class="text-gray-800 text-lg font-bold group-hover:text-up-green transition mb-2">
+              {{ item.title }}
+            </h3>
+          </a>
+
+          </article>
+        }
+      </div>
+    </div>
+
+    <app-pagination
+      [currentPage]="currentPage"
+      [visiblePages]="visiblePages"
+      [hasNextPage]="hasNextPage"
+      [pageSize]="pageSize"
+      (pageChange)="goToPage($event)"
+      (pageSizeChange)="onPageSizeChangeFromPagination($event)"
+    />
+  }
+</section>
