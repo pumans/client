@@ -1,45 +1,60 @@
 <div class="flex flex-col gap-6 md:gap-8">
 
-  @for (section of sections; track section.title) {
-    <section class="bg-white rounded-sm shadow-sm border border-gray-100 overflow-hidden">
+  @if (isLoading()) {
+    <div class="flex justify-center items-center py-20">
+      <div class="w-12 h-12 border-4 border-gray-200 dark:border-gray-700 border-t-up-green rounded-full animate-spin"></div>
+    </div>
+  } @else {
 
-      <div class="border-b-2 border-up-green px-4 py-3 md:px-5 md:py-3.5 bg-white flex justify-between items-center">
-        <h2 class="font-bold text-up-dark text-sm md:text-base uppercase tracking-wide">
-          {{ section.title }}
-        </h2>
-        <a href="#" class="text-xs text-gray-400 hover:text-up-green transition-colors uppercase font-semibold">
-          Всі новини <i class="fas fa-chevron-right ml-1 text-[10px]"></i>
-        </a>
-      </div>
+    @for (row of rows(); track $index) {
+      <section class="bg-white dark:bg-gray-900 rounded-sm shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden transition-colors duration-300">
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
-
-        @for (article of section.articles; track article.title; let isFirst = $first) {
-
-          <a href="#"
-             class="group block p-4 md:p-5 hover:bg-up-light transition-colors duration-300 border-gray-200"
-             [class.border-b]="isFirst"
-             [class.md:border-b-0]="isFirst"
-             [class.md:border-r]="isFirst">
-
-            <div class="aspect-video overflow-hidden rounded-sm mb-3.5 bg-gray-100">
-              <img
-                [src]="article.image"
-                [alt]="article.title"
-                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
-
-            <h3 class="text-[14px] md:text-[15px] font-semibold text-gray-900 group-hover:text-up-green transition-colors leading-snug line-clamp-3">
-              {{ article.title }}
-            </h3>
-
-          </a>
-
+        @if (row[0].categoryTitle === row[row.length - 1].categoryTitle) {
+          <div class="border-b-2 border-up-green px-4 py-3 md:px-5 md:py-3.5 bg-white dark:bg-gray-900 transition-colors duration-300">
+            <a [routerLink]="row[0].categoryLink" class="font-bold text-up-dark dark:text-gray-100 text-[13px] md:text-[15px] uppercase tracking-wide hover:text-up-green dark:hover:text-up-green transition-colors block">
+              {{ row[0].categoryTitle }}
+            </a>
+          </div>
         }
-      </div>
 
-    </section>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-0">
+
+          @for (item of row; track item.id; let isFirst = $first) {
+
+            <div class="p-4 md:p-5 border-gray-200 dark:border-gray-800 flex flex-col hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-300"
+                 [class.border-b]="isFirst && row.length > 1"
+                 [class.md:border-b-0]="isFirst && row.length > 1"
+                 [class.md:border-r]="isFirst && row.length > 1">
+
+              @if (row[0].categoryTitle !== row[row.length - 1].categoryTitle) {
+                <div class="mb-3.5 border-b-2 border-up-green pb-2 h-12 md:h-14 flex items-end">
+                  <a [routerLink]="item.categoryLink" class="font-bold text-up-dark dark:text-gray-100 text-[16px] md:text-[13px] uppercase tracking-wide hover:text-up-green dark:hover:text-up-green transition-colors w-full line-clamp-2 block">
+                    {{ item.categoryTitle }}
+                  </a>
+                </div>
+              }
+
+              <a [routerLink]="['/article', item.id]" class="group flex-grow block">
+                <div class="aspect-video overflow-hidden rounded-sm mb-3.5 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
+                  <img
+                    [src]="item.imageUrl ? 'http://127.0.0.1:3000' + item.imageUrl : '/assets/placeholder.jpg'"
+                    [alt]="item.title"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                <h3 class="text-[14px] md:text-[15px] font-semibold text-gray-900 dark:text-gray-200 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug line-clamp-3">
+                  {{ item.title }}
+                </h3>
+              </a>
+
+            </div>
+          }
+
+        </div>
+      </section>
+    }
+
   }
 
 </div>

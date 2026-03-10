@@ -49,9 +49,9 @@ export class NewsService {
     this.cachedLatestNews = null;
     return this.getLatestNews();
   }
-  getArticlesByContentSlug(fullSlug: string): Observable<CategoryResponse> {
-    // Викликаємо ваш API: http://127.0.0.1:3000/api/content?slug=law-practice/practice_court
-    return this.http.get<CategoryResponse>(`${this.apiUrl}/content?slug=${fullSlug}`);
+
+  getArticlesByContentSlug(slug: string, page: number = 1, limit: number = 9): Observable<any> {
+    return this.http.get(`${this.apiUrl}/content?slug=${slug}&page=${page}&limit=${limit}`);
   }
   /**
    * Отримує список новин для конкретного розділу (IBLOCK_SECTION_ID)

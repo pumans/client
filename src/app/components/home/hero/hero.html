@@ -1,11 +1,11 @@
-<section class="bg-up-light py-2 md:py-3">
-  <div class="max-w-[1200px] mx-auto">
+<section class="bg-up-light dark:bg-transparent py-2 md:py-3 transition-colors duration-300">
+  <div class="max-w-[1400px] mx-auto">
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
 
       @for (article of featuredArticles(); track article.title) {
 
-        <a [routerLink]="['/article', article.id]" class="group relative overflow-hidden rounded bg-up-dark block">
+        <a [routerLink]="['/article', article.id]" class="group relative overflow-hidden rounded bg-up-dark dark:bg-gray-900 block transition-colors duration-300">
 
           <div class="aspect-video relative overflow-hidden">
             <img
@@ -15,13 +15,13 @@
             />
           </div>
 
-          <div class="absolute inset-0 bg-gradient-to-t from-up-dark/95 via-up-dark/50 to-transparent flex flex-col justify-end p-5 md:p-6">
+          <div class="absolute inset-0 bg-gradient-to-t from-up-dark/95 via-up-dark/50 dark:from-black/95 dark:via-black/50 to-transparent flex flex-col justify-end p-5 md:p-6">
 
             <span class="text-up-green font-bold text-[11px] md:text-xs mb-2 tracking-wide uppercase">
               {{ article.category }}
             </span>
 
-            <h3 class="text-white text-lg md:text-xl lg:text-2xl font-bold group-hover:text-up-green transition-colors leading-snug line-clamp-3">
+            <h3 class="text-white dark:text-gray-100 text-lg md:text-xl lg:text-2xl font-bold group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug line-clamp-3">
               {{ article.title }}
             </h3>
 

@@ -1,97 +1,144 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { NewsService } from '../../../services/news.service';
-import { Article } from '../../../models/article';
-//import { RouterLink } from '@angular/router';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-content',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, RouterLink],
   templateUrl: './main-content.html',
 })
 export class MainContent implements OnInit {
   private newsService = inject(NewsService);
-  //public sections: any[] = [];
-  public sections = [
-    {
-      title: 'СУДОВА ПРАКТИКА',
-      articles: [
-        {
-          title: 'Позиція Верховного Суду щодо трудових спорів про незаконне звільнення',
-          image:
-            'https://images.unsplash.com/photo-1767972463877-b64ba4283cd0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxnYXZlbCUyMGp1ZGdlJTIwY291cnR8ZW58MXx8fHwxNzcyMTAxMzkwfDA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-        {
-          title: 'Нова практика господарських судів у справах про банкрутство',
-          image:
-            'https://images.unsplash.com/photo-1598139384902-5a8217874645?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGxhdyUyMG9mZmljZXxlbnwxfHx8fDE3NzIxMDEzOTF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-      ],
-    },
-    {
-      title: 'ПРОКУРОРСЬКА ПРАКТИКА',
-      articles: [
-        {
-          title: 'Оскарження бездіяльності прокурора: процедура та строки',
-          image:
-            'https://images.unsplash.com/photo-1711365306958-577e114787ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjcmltaW5hbCUyMGxhdyUyMHBvbGljZXxlbnwxfHx8fDE3NzIxMDEzOTJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-        {
-          title: 'Повноваження прокурора у цивільному процесі',
-          image:
-            'https://images.unsplash.com/photo-1685747750264-a4e932005dde?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3VydGhvdXNlJTIwYnVpbGRpbmclMjBhcmNoaXRlY3R1cmV8ZW58MXx8fHwxNzcyMDEyNDEzfDA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-      ],
-    },
-    {
-      title: 'АДВОКАТСЬКА ПРАКТИКА',
-      articles: [
-        {
-          title: 'Етичні правила адвокатської діяльності: нові вимоги',
-          image:
-            'https://images.unsplash.com/photo-1758518731462-d091b0b4ed0d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsYXd5ZXIlMjBjb25zdWx0YXRpb24lMjBwcm9mZXNzaW9uYWx8ZW58MXx8fHwxNzcyMDk2NTMzfDA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-        {
-          title: 'Дисциплінарна відповідальність адвоката: підстави та процедура',
-          image:
-            'https://images.unsplash.com/photo-1769092992534-f2d0210162b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsZWdhbCUyMGJvb2tzJTIwbGlicmFyeSUyMGVkdWNhdGlvbnxlbnwxfHx8fDE3NzIxMDEzOTB8MA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-      ],
-    },
-    {
-      title: 'МІЖНАРОДНЕ ПРАВО',
-      articles: [
-        {
-          title: 'Рішення Європейського суду з прав людини у справах проти України',
-          image:
-            'https://images.unsplash.com/photo-1763729805496-b5dbf7f00c79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMGNvbnRyYWN0JTIwc2lnbmluZ3xlbnwxfHx8fDE3NzIxMDA4MTB8MA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-        {
-          title: 'Імплементація директив ЄС у національне законодавство',
-          image:
-            'https://images.unsplash.com/photo-1565414791381-056c6ab0f8c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXdzcGFwZXIlMjBsYXclMjBsZWdhbCUyMG5ld3N8ZW58MXx8fHwxNzcyMTAxMzkwfDA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-      ],
-    },
-    {
-      title: 'ПРАВО В ІНТЕРНЕТІ',
-      articles: [
-        {
-          title: 'Захист персональних даних: GDPR та українське законодавство',
-          image:
-            'https://images.unsplash.com/photo-1762152212840-3ec91c031d52?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0YXglMjBkb2N1bWVudHMlMjBmaW5hbmNpYWx8ZW58MXx8fHwxNzcyMTAxMzkxfDA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-        {
-          title: 'Кіберзлочинність: відповідальність та запобігання',
-          image:
-            'https://images.unsplash.com/photo-1528747008803-f9f5cc8f1a64?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYW1pbHklMjBjb25zdWx0YXRpb24lMjBsYXd5ZXJ8ZW58MXx8fHwxNzcyMTAwODEwfDA&ixlib=rb-4.1.0&q=80&w=1080',
-        },
-      ],
-    },
-  ];
+
+  // Тепер ми зберігаємо дані у вигляді масиву рядків (в кожному рядку 1 або 2 статті)
+  public rows = signal<any[][]>([]);
+  public isLoading = signal<boolean>(true);
 
   ngOnInit() {
-    // Завантажуємо реальну новину з вашої бази даних
+    const safeGet = (slug: string) => {
+      return this.newsService
+        .getArticlesByContentSlug(slug)
+        .pipe(catchError(() => of({ articles: [] })));
+    };
 
+    forkJoin({
+      sudova: safeGet('law-practice/practice_court'),
+      prokuror: safeGet('law-practice/practice_public_prosecutor'),
+      pravoohoron: safeGet('law-practice/pravookhoronnykh-organiv'),
+      advokat: safeGet('law-practice/lawyers-practice'),
+      pozyciya: safeGet('scientific-thought/practice_court'),
+      analityka: safeGet('scientific-thought/practice_public_prosecutor'),
+      naukova: safeGet('scientific-thought/lawyers-practice'),
+      mizhnarodne: safeGet('international_law/public_international_law'),
+      mystectvo: safeGet('scientific-thought/law_in_art'),
+      vydannya: safeGet('legal_publications/ukrainian_legal_publications'),
+      osoby: safeGet('man_law'),
+      chynni: safeGet('law-making/bill_enacted_into_law'),
+      rozglyad: safeGet('law-making/bill_under_consideration'),
+      priynyati: safeGet('law-making/bill_passed_by_legislature'),
+    }).subscribe({
+      next: (data) => {
+        // Допоміжна функція, яка дістає статтю і прикріплює до неї її категорію
+        const extract = (res: any, index: number, catTitle: string, catLink: string) => {
+          if (res && res.articles && res.articles[index]) {
+            return {
+              ...res.articles[index],
+              categoryTitle: catTitle,
+              categoryLink: catLink,
+            };
+          }
+          return null; // Якщо статті немає
+        };
+
+        const allRows = [
+          // 1 строка - 2 новини
+          [
+            extract(data.sudova, 0, 'Судова практика', '/law-practice/practice_court'),
+            extract(data.sudova, 1, 'Судова практика', '/law-practice/practice_court'),
+          ],
+          // 2 строка
+          [
+            extract(
+              data.prokuror,
+              0,
+              'Прокурорська практика',
+              '/law-practice/practice_public_prosecutor',
+            ),
+            extract(
+              data.pravoohoron,
+              0,
+              'Практика правоохоронних органів',
+              '/law-practice/pravookhoronnykh-organiv',
+            ),
+          ],
+          // 3 строка
+          [
+            extract(data.advokat, 0, 'Адвокатська практика', '/law-practice/lawyers-practice'),
+            extract(data.pozyciya, 0, 'Правова позиція', '/scientific-thought/practice_court'),
+          ],
+          // 4 строка
+          [
+            extract(
+              data.analityka,
+              0,
+              'Аналітика',
+              '/scientific-thought/practice_public_prosecutor',
+            ),
+            extract(data.naukova, 0, 'Наукова думка', '/scientific-thought/lawyers-practice'),
+          ],
+          // 5 строка
+          [
+            extract(
+              data.mizhnarodne,
+              0,
+              'Міжнародне право',
+              '/international_law/public_international_law',
+            ),
+            extract(data.mystectvo, 0, 'Право в мистецтві', '/scientific-thought/law_in_art'),
+          ],
+          // 6 строка
+          [
+            extract(
+              data.vydannya,
+              0,
+              'Видання',
+              '/legal_publications/ukrainian_legal_publications',
+            ),
+            extract(data.osoby, 0, 'Право в особах', '/man_law'),
+          ],
+          // 7 строка - 2 новини
+          [
+            extract(data.chynni, 0, 'Набули чинності', '/law-making/bill_enacted_into_law'),
+            extract(data.chynni, 1, 'Набули чинності', '/law-making/bill_enacted_into_law'),
+          ],
+          // 8 строка
+          [
+            extract(
+              data.rozglyad,
+              0,
+              'Законопроєкти на розгляді',
+              '/law-making/bill_under_consideration',
+            ),
+            extract(data.priynyati, 0, 'Прийняті закони', '/law-making/bill_passed_by_legislature'),
+          ],
+        ];
+
+        // Відфільтровуємо порожні блоки (якщо стаття не знайдена в БД)
+        const validRows = allRows
+          .map((row) => row.filter((item) => item !== null))
+          .filter((row) => row.length > 0);
+
+        this.rows.set(validRows);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        console.error('Помилка завантаження головного контенту', err);
+        this.isLoading.set(false);
+      },
+    });
   }
 }
