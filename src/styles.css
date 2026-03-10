@@ -1,7 +1,9 @@
 /* Імпортуємо ядро Tailwind v4 */
 @import "tailwindcss";
 
-/* Налаштовуємо нашу фірмову тему прямо тут */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* фірмова тема */
 @theme {
   --color-up-green: #1C8B39;
   --color-up-dark: #19222E;

@@ -1,5 +1,5 @@
 <div class="hidden md:block bg-up-dark relative z-30">
-  <div class="max-w-[1200px] mx-auto px-4">
+  <div class="max-w-[1400px] mx-auto px-4">
     <nav class="flex w-full">
       <ul class="flex w-full m-0 p-0 list-none min-w-0 justify-between">
         @for (item of menuItems; track item.name; let last = $last) {
@@ -45,42 +45,42 @@
 @if (isMobileMenuOpen) {
   <div class="md:hidden fixed inset-0 bg-black/50 z-40 transition-opacity" (click)="onClose()"></div>
 
-  <div class="md:hidden absolute top-full left-0 w-full bg-up-light border-b-4 border-up-green shadow-xl z-50 flex flex-col">
-    <div class="p-4 bg-white">
-      <div class="relative w-full flex rounded-[20px] border border-gray-300 overflow-hidden bg-white">
-        <input type="text" placeholder="Пошук по сайту" class="w-full px-4 py-2 text-sm text-gray-700 outline-none">
-        <button class="text-gray-400 px-4 flex items-center justify-center">
+  <div class="md:hidden absolute top-full left-0 w-full bg-up-light dark:bg-gray-900 border-b-4 border-up-green shadow-xl z-50 flex flex-col transition-colors duration-300">
+    <div class="p-4 bg-white dark:bg-gray-900 transition-colors duration-300">
+      <div class="relative w-full flex rounded-[20px] border border-gray-300 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800 transition-colors duration-300">
+        <input type="text" placeholder="Пошук по сайту" class="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none bg-transparent">
+        <button class="text-gray-400 dark:text-gray-300 px-4 flex items-center justify-center">
           <i class="fas fa-search"></i>
         </button>
       </div>
     </div>
 
-    <nav class="bg-up-light overflow-y-auto max-h-[70vh]">
+    <nav class="bg-up-light dark:bg-gray-900 overflow-y-auto max-h-[70vh] transition-colors duration-300">
       <ul class="flex flex-col m-0 p-0 list-none">
         @for (item of menuItems; track item.name) {
-          <li class="border-b border-gray-200 last:border-b-0">
+          <li class="border-b border-gray-200 dark:border-gray-800 last:border-b-0">
 
             @if (item.subItems) {
-              <span class="block px-5 py-3.5 text-gray-500 text-[14px] uppercase tracking-wide font-medium cursor-default select-none">
+              <span class="block px-5 py-3.5 text-gray-500 dark:text-gray-400 text-[14px] uppercase tracking-wide font-medium cursor-default select-none">
                 {{ item.name }}
               </span>
             } @else {
               <a [routerLink]="item.link"
                  (click)="onClose()"
-                 routerLinkActive="bg-white text-up-green"
-                 class="block px-5 py-3.5 text-gray-800 text-[14px] uppercase tracking-wide font-medium">
+                 routerLinkActive="bg-white dark:bg-gray-800 text-up-green"
+                 class="block px-5 py-3.5 text-gray-800 dark:text-gray-200 text-[14px] uppercase tracking-wide font-medium hover:text-up-green dark:hover:text-up-green transition-colors">
                 {{ item.name }}
               </a>
             }
 
             @if (item.subItems) {
-              <ul class="bg-gray-50 border-t border-gray-100">
+              <ul class="bg-gray-50 dark:bg-gray-800 border-t border-gray-100 dark:border-gray-800 transition-colors duration-300">
                 @for (sub of item.subItems; track sub.name) {
                   <li>
                     <a [routerLink]="sub.link"
                        (click)="onClose()"
                        routerLinkActive="text-up-green"
-                       class="block px-8 py-2.5 text-gray-600 text-[13px] hover:text-up-green transition-colors">
+                       class="block px-8 py-2.5 text-gray-600 dark:text-gray-300 text-[13px] hover:text-up-green dark:hover:text-up-green transition-colors">
                       {{ sub.name }}
                     </a>
                   </li>

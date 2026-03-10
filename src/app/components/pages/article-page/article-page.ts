@@ -20,6 +20,7 @@ export class ArticlePage implements OnInit {
 
   public article: Article | null = null;
   public isLoading = true;
+  public breadcrumbs: Array<{ name: string; link: string }> = [];
 
   public tags = [
     'Володимир Зеленський',
@@ -60,12 +61,10 @@ export class ArticlePage implements OnInit {
         switchMap((params) => {
           const rawId = params.get('id');
           const id = Number(rawId);
-          console.log('Перехід на новину ID:', id); // Для діагностики
 
           // Якщо id не число (наприклад, маршрут /news/ukraine),
           // не робимо HTTP-запит, щоб не викликати помилок та PendingTasks.
           if (!rawId || Number.isNaN(id)) {
-            console.warn('Некоректний ID новини в маршруті:', rawId);
             this.isLoading = false;
             this.article = null;
             this.cdr.detectChanges();
@@ -75,6 +74,7 @@ export class ArticlePage implements OnInit {
 
           this.isLoading = true;
           this.article = null;
+          this.breadcrumbs = [];
           this.cdr.detectChanges(); // Повідомляємо про початок завантаження
 
           return this.newsService.getArticleById(id);
@@ -83,6 +83,9 @@ export class ArticlePage implements OnInit {
       .subscribe({
         next: (data) => {
           this.article = data;
+          if (data) {
+            this.buildBreadcrumbs(data);
+          }
           this.isLoading = false;
           this.cdr.detectChanges(); // ПРИМУСОВО оновлюємо інтерфейс
         },
@@ -100,11 +103,20 @@ export class ArticlePage implements OnInit {
     }
   }
 
+  private buildBreadcrumbs(article: any) {
+    // Оскільки бекенд тепер надсилає готовий масив, ми просто беремо його!
+    if (article.breadcrumbs && article.breadcrumbs.length > 0) {
+      this.breadcrumbs = article.breadcrumbs;
+    } else {
+      // Фолбек, якщо раптом сталася помилка
+      this.breadcrumbs = [];
+    }
+  }
+
   private loadArticle(id: number) {
     this.isLoading = true;
     this.newsService.getArticleById(id).subscribe({
       next: (data) => {
-        console.log('Отримані дані статті:', data);
         this.article = data;
         this.isLoading = false;
         // Можна також завантажити схожі статті з тієї ж секції

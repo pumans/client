@@ -1,0 +1,98 @@
+@if (isLoading()) {
+  <div class="flex justify-center items-center py-20">
+    <div class="w-12 h-12 border-4 border-gray-200 dark:border-gray-700 border-t-up-green rounded-full animate-spin"></div>
+  </div>
+} @else {
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-0 pt-6 md:pt-8 border-t border-gray-200 dark:border-gray-800">
+
+    <div class="lg:col-span-3 lg:border-r border-gray-200 dark:border-gray-800 lg:pr-6 xl:pr-8 flex flex-col">
+      @for (item of leftColumn(); track item.id; let isLast = $last) {
+
+        <div class="flex flex-col py-5 first:pt-0"
+             [class.border-b]="!isLast"
+             [class.border-gray-200]="!isLast"
+             [class.dark:border-gray-800]="!isLast">
+
+          <a [routerLink]="item.categoryLink" class="text-[12px] md:text-[13px] text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2.5 hover:text-up-green dark:hover:text-up-green transition-colors inline-block">
+            {{ item.categoryTitle }}
+          </a>
+
+          <a [routerLink]="['/article', item.id]" class="group block">
+            <h3 class="text-[16px] md:text-[18px] lg:text-[19px] font-semibold text-gray-900 dark:text-gray-100 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug">
+              {{ item.title }}
+            </h3>
+          </a>
+        </div>
+
+      }
+    </div>
+
+    <div class="lg:col-span-9 lg:pl-6 xl:pl-8 flex flex-col">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 border-b border-gray-200 dark:border-gray-800 pb-6 md:pb-8 mb-6 md:mb-8">
+        @for (item of rightTop(); track item.id; let isFirst = $first) {
+
+          <div class="flex flex-col transition-colors duration-300"
+               [class.md:border-r]="isFirst"
+               [class.border-gray-200]="isFirst"
+               [class.dark:border-gray-800]="isFirst"
+               [class.md:pr-6]="isFirst"
+               [class.md:pl-6]="!isFirst">
+
+            <div class="mb-3 border-b-2 border-gray-900 dark:border-gray-100 pb-1 inline-flex self-start">
+              <a [routerLink]="item.categoryLink" class="font-bold text-gray-900 dark:text-gray-100 text-[13px] uppercase tracking-wide hover:text-up-green dark:hover:text-up-green transition-colors">
+                {{ item.categoryTitle }}
+              </a>
+            </div>
+
+            <a [routerLink]="['/article', item.id]" class="group flex-grow block mt-2">
+              <div class="aspect-video overflow-hidden mb-3 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
+                <img [src]="item.imageUrl ? 'http://127.0.0.1:3000' + item.imageUrl : '/assets/placeholder.jpg'"
+                     [alt]="item.title"
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"/>
+              </div>
+              <h3 class="text-[16px] md:text-[18px] lg:text-[20px] font-bold text-gray-900 dark:text-gray-100 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug">
+                {{ item.title }}
+              </h3>
+            </a>
+
+          </div>
+        }
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        @for (item of rightBottom(); track item.id; let isFirst = $first) {
+
+          <div class="flex flex-col transition-colors duration-300"
+               [class.md:border-r]="isFirst"
+               [class.border-gray-200]="isFirst"
+               [class.dark:border-gray-800]="isFirst"
+               [class.md:pr-6]="isFirst"
+               [class.md:pl-6]="!isFirst">
+
+            <div class="mb-3 border-b-2 border-gray-900 dark:border-gray-100 pb-1 inline-flex self-start">
+              <a [routerLink]="item.categoryLink" class="font-bold text-gray-900 dark:text-gray-100 text-[13px] uppercase tracking-wide hover:text-up-green dark:hover:text-up-green transition-colors">
+                {{ item.categoryTitle }}
+              </a>
+            </div>
+
+            <a [routerLink]="['/article', item.id]" class="group flex-grow block mt-2">
+              <div class="aspect-video overflow-hidden mb-3 bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
+                <img [src]="item.imageUrl ? 'http://127.0.0.1:3000' + item.imageUrl : '/assets/placeholder.jpg'"
+                     [alt]="item.title"
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"/>
+              </div>
+              <h3 class="text-[15px] md:text-[17px] font-semibold text-gray-900 dark:text-gray-200 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug">
+                {{ item.title }}
+              </h3>
+            </a>
+
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+
+}

@@ -1,36 +1,43 @@
-<section class="bg-up-light py-2 md:py-3">
-  <div class="max-w-[1200px] mx-auto">
+@for (article of featuredArticles(); track article.title; let i = $index) {
+  @if (i === 0) {
+    <a [routerLink]="['/article', article.id]" class="lg:col-span-3 flex flex-col lg:flex-row gap-4 lg:gap-6 group border-b border-gray-200 dark:border-gray-800 pb-6 md:pb-8">
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+      <div class="w-full lg:w-[40%] flex flex-col justify-center">
+        <span class="text-gray-500 dark:text-gray-400 text-[11px] md:text-xs mb-2 tracking-wide uppercase">
+          {{ article.category }}
+        </span>
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-tight mb-3">
+          {{ article.title }}
+        </h2>
+      </div>
 
-      @for (article of featuredArticles(); track article.title) {
+      <div class="w-full lg:w-[60%] aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+        <img
+          [src]="'http://127.0.0.1:3000' + article.image"
+          [alt]="article.title"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+      </div>
+    </a>
+  } @else {
+    <a [routerLink]="['/article', article.id]" class="lg:col-span-1 flex flex-col gap-3 pt-4 lg:pt-0 border-t border-gray-200 dark:border-gray-800 lg:border-t-0 group">
 
-        <a [routerLink]="['/article', article.id]" class="group relative overflow-hidden rounded bg-up-dark block">
+      <div class="aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800">
+        <img
+          [src]="'http://127.0.0.1:3000' + article.image"
+          [alt]="article.title"
+          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+      </div>
 
-          <div class="aspect-video relative overflow-hidden">
-            <img
-              [src]="'http://127.0.0.1:3000' + article.image"
-              [alt]="article.title"
-              class="w-full h-full object-cover opacity-70 group-hover:opacity-90 group-hover:scale-105 transition-all duration-500"
-            />
-          </div>
-
-          <div class="absolute inset-0 bg-gradient-to-t from-up-dark/95 via-up-dark/50 to-transparent flex flex-col justify-end p-5 md:p-6">
-
-            <span class="text-up-green font-bold text-[11px] md:text-xs mb-2 tracking-wide uppercase">
-              {{ article.category }}
-            </span>
-
-            <h3 class="text-white text-lg md:text-xl lg:text-2xl font-bold group-hover:text-up-green transition-colors leading-snug line-clamp-3">
-              {{ article.title }}
-            </h3>
-
-          </div>
-
-        </a>
-      }
-
-    </div>
-
-  </div>
-</section>
+      <div class="flex flex-col gap-1.5">
+        <span class="text-gray-500 dark:text-gray-400 text-[11px] md:text-xs tracking-wide uppercase">
+          {{ article.category }}
+        </span>
+        <h3 class="ext-[16px] md:text-[18px] lg:text-[19px] font-bold text-gray-900 dark:text-gray-100 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug line-clamp-3">
+          {{ article.title }}
+        </h3>
+      </div>
+    </a>
+  }
+}

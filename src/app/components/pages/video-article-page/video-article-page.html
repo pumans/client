@@ -1,11 +1,11 @@
 <main class="max-w-[900px] mx-auto px-4 py-8 md:py-12">
   @if (loading()) {
     <div class="flex justify-center items-center py-20">
-      <div class="w-12 h-12 border-4 border-gray-200 border-t-up-green rounded-full animate-spin"></div>
+      <div class="w-12 h-12 border-4 border-gray-200 dark:border-gray-700 border-t-up-green rounded-full animate-spin"></div>
     </div>
   } @else if (article(); as item) {
 
-    <article class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <article class="bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden transition-colors duration-300">
       @if (embedUrl()) {
         <div class="aspect-video w-full bg-black">
           <iframe
@@ -19,23 +19,23 @@
       }
 
       <div class="p-5 md:p-8 lg:p-10">
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-4 md:mb-6">
+        <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4 md:mb-6 transition-colors">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
           </svg>
           <span>{{ item.date | date:'dd.MM.yyyy HH:mm' }}</span>
         </div>
 
-        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-6">
+        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100 leading-tight mb-6 transition-colors">
           {{ item.title }}
         </h1>
 
-        <div class="prose prose-sm md:prose-base text-gray-700" [innerHTML]="item.detailText || item.summary"></div>
+        <div class="prose prose-sm md:prose-base text-gray-700 dark:text-gray-300 dark:prose-invert max-w-none transition-colors" [innerHTML]="item.detailText || item.summary"></div>
       </div>
     </article>
 
   } @else {
-    <div class="text-center py-20 text-gray-500">
+    <div class="text-center py-20 text-gray-500 dark:text-gray-400">
       <h2 class="text-2xl font-bold mb-2">Відео не знайдено</h2>
     </div>
   }
