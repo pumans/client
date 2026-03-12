@@ -1,0 +1,66 @@
+<div class="px-4 py-6 md:py-8 lg:px-8 max-w-[1400px] mx-auto">
+
+  <nav class="flex items-center text-[11px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-6 md:mb-8">
+    <a routerLink="/" class="hover:text-up-green transition-colors">Головна</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-900 dark:text-gray-100">{{ displayTitle() }}</span>
+  </nav>
+
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-0">
+
+    <div class="lg:col-span-3 lg:pr-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 md:mb-8 uppercase">
+        {{ displayTitle() }}
+      </h1>
+
+      @if (loading()) {
+        <div class="flex justify-center items-center py-10">
+          <div class="w-8 h-8 md:w-12 md:h-12 border-4 border-gray-200 dark:border-gray-700 border-t-up-green rounded-full animate-spin"></div>
+        </div>
+      }
+      @else if (articles().length > 0) {
+
+        <div class="flex flex-col">
+          @for (article of articles(); track article.id) {
+            <article class="group py-6 first:pt-0 border-b border-gray-200 dark:border-gray-800 flex flex-col md:flex-row md:items-baseline gap-2 md:gap-6">
+
+              <div class="flex-shrink-0 w-24 text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400">
+                {{ article.date | date:'dd.MM.yyyy' }}
+              </div>
+
+              <div class="flex-grow">
+                <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 leading-tight md:leading-snug transition-colors group-hover:text-up-green mb-2">
+                  <a [routerLink]="['/article', article.id]">
+                    {{ article.title }}
+                  </a>
+                </h2>
+                <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2" [innerHTML]="article.summary"></p>
+              </div>
+            </article>
+          }
+        </div>
+
+        <div class="mt-8 pt-6">
+          <app-pagination
+            [currentPage]="currentPage()"
+            [visiblePages]="visiblePages()"
+            [hasNextPage]="hasNextPage()"
+            [pageSize]="pageSize()"
+            (pageChange)="goToPage($event)"
+            (pageSizeChange)="onPageSizeChange($event)"
+          />
+        </div>
+
+      } @else {
+        <div class="text-center py-12 border-t border-gray-200 dark:border-gray-800">
+          <p class="text-[11px] tracking-wide uppercase text-gray-500">Публікацій немає.</p>
+        </div>
+      }
+    </div>
+
+    <aside class="lg:col-span-1 lg:pl-8 lg:border-l border-gray-200 dark:border-gray-800 pt-8 lg:pt-0 border-t lg:border-t-0">
+      <app-sidebar-right />
+    </aside>
+
+  </div>
+</div>

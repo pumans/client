@@ -5,7 +5,7 @@
         @for (item of menuItems; track item.name; let last = $last) {
           <li class="flex-shrink-1 min-w-0 text-center relative group" [class.max-[900px]:hidden]="last">
             @if (item.subItems) {
-              <span class="w-full border-b-4 border-transparent px-1.5 lg:px-2 py-3.5 text-white/90 text-[11px] lg:text-[12px] xl:text-[13px] uppercase tracking-tighter lg:tracking-tight flex items-center justify-center h-full cursor-default select-none">
+              <span class="w-full border-b-4 border-transparent px-1.5 lg:px-2 py-3.5 text-white/90 text-xs lg:text-sm xl:text-base uppercase tracking-tighter lg:tracking-tight flex items-center justify-center h-full cursor-default select-none">
                 {{ item.name }}
               </span>
             } @else {
@@ -16,18 +16,20 @@
                  [class.border-up-green]="rla.isActive"
                  [class.border-transparent]="!rla.isActive"
                  [class.text-up-green]="rla.isActive"
-                 class="w-full border-b-4 px-1.5 lg:px-2 py-3.5 text-white text-[11px] lg:text-[12px] xl:text-[13px] uppercase hover:text-up-green tracking-tighter lg:tracking-tight transition-all hover:bg-white/10 no-underline whitespace-nowrap flex items-center justify-center h-full cursor-pointer">
+                 class="w-full border-b-4 px-1.5 lg:px-2 py-3.5 text-white text-xs lg:text-sm xl:text-base uppercase hover:text-up-green tracking-tighter lg:tracking-tight transition-all hover:bg-white/10 no-underline whitespace-nowrap flex items-center justify-center h-full cursor-pointer">
                 {{ item.name }}
               </a>
             }
 
             @if (item.subItems) {
-              <div class="absolute left-0 top-full w-56 bg-up-dark border-t-2 border-up-green shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 text-left">
+              <div class="absolute top-full w-56 bg-up-dark border-t-2 border-up-green shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 text-left"
+                   [class.left-0]="!last"
+                   [class.right-0]="last">
                 <ul class="flex flex-col m-0 p-0 list-none">
                   @for (sub of item.subItems; track sub.name) {
                     <li>
                       <a [routerLink]="sub.link"
-                         class="block px-5 py-3.5 text-white text-[11px] lg:text-xs uppercase tracking-wider hover:bg-white/10 hover:text-up-green transition-colors border-b border-gray-700 last:border-b-0">
+                         class="block px-5 py-3.5 text-white text-sm lg:text-base uppercase tracking-wider hover:bg-white/10 hover:text-up-green transition-colors border-b border-gray-700 last:border-b-0">
                         {{ sub.name }}
                       </a>
                     </li>
@@ -48,7 +50,7 @@
   <div class="md:hidden absolute top-full left-0 w-full bg-up-light dark:bg-gray-900 border-b-4 border-up-green shadow-xl z-50 flex flex-col transition-colors duration-300">
     <div class="p-4 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div class="relative w-full flex rounded-[20px] border border-gray-300 dark:border-gray-700 overflow-hidden bg-white dark:bg-gray-800 transition-colors duration-300">
-        <input type="text" placeholder="Пошук по сайту" class="w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 outline-none bg-transparent">
+        <input type="text" placeholder="Пошук по сайту" class="w-full px-4 py-2 text-base text-gray-700 dark:text-gray-200 outline-none bg-transparent">
         <button class="text-gray-400 dark:text-gray-300 px-4 flex items-center justify-center">
           <i class="fas fa-search"></i>
         </button>
@@ -61,14 +63,14 @@
           <li class="border-b border-gray-200 dark:border-gray-800 last:border-b-0">
 
             @if (item.subItems) {
-              <span class="block px-5 py-3.5 text-gray-500 dark:text-gray-400 text-[14px] uppercase tracking-wide font-medium cursor-default select-none">
+              <span class="block px-5 py-3.5 text-gray-500 dark:text-gray-400 text-base uppercase tracking-wide font-medium cursor-default select-none">
                 {{ item.name }}
               </span>
             } @else {
               <a [routerLink]="item.link"
                  (click)="onClose()"
                  routerLinkActive="bg-white dark:bg-gray-800 text-up-green"
-                 class="block px-5 py-3.5 text-gray-800 dark:text-gray-200 text-[14px] uppercase tracking-wide font-medium hover:text-up-green dark:hover:text-up-green transition-colors">
+                 class="block px-5 py-3.5 text-gray-800 dark:text-gray-200 text-base uppercase tracking-wide font-medium hover:text-up-green dark:hover:text-up-green transition-colors">
                 {{ item.name }}
               </a>
             }
@@ -80,7 +82,7 @@
                     <a [routerLink]="sub.link"
                        (click)="onClose()"
                        routerLinkActive="text-up-green"
-                       class="block px-8 py-2.5 text-gray-600 dark:text-gray-300 text-[13px] hover:text-up-green dark:hover:text-up-green transition-colors">
+                       class="block px-8 py-2.5 text-gray-600 dark:text-gray-300 text-sm hover:text-up-green dark:hover:text-up-green transition-colors">
                       {{ sub.name }}
                     </a>
                   </li>

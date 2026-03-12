@@ -18,34 +18,28 @@
           <div class="w-8 h-8 md:w-12 md:h-12 border-4 border-gray-200 dark:border-gray-700 border-t-up-green rounded-full animate-spin"></div>
         </div>
       }
-      @else if (videos().length > 0) {
+      @else if (articles().length > 0) {
 
         <div class="grid grid-cols-1 md:grid-cols-2">
-          @for (video of videos(); track video.id; let index = $index) {
+          @for (article of articles(); track article.id; let index = $index) {
             <article class="group flex flex-col pb-6 mb-6 md:pb-8 md:mb-8 border-b border-gray-200 dark:border-gray-800"
                      [class.md:border-r]="index % 2 === 0"
                      [class.md:pr-6]="index % 2 === 0"
                      [class.md:pl-6]="index % 2 !== 0">
 
-              <a [routerLink]="['/video-article', video.id]" class="block relative overflow-hidden aspect-video bg-gray-100 dark:bg-gray-800 mb-4">
-                <img [src]="getYoutubeThumbnail(video.videoLink)"
-                     [alt]="video.title"
-                     class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105">
-
-                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div class="w-12 h-12 bg-up-green flex items-center justify-center text-white group-hover:bg-up-dark transition-colors duration-300">
-                    <svg class="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                  </div>
-                </div>
+              <a [routerLink]="['/article', article.id]" class="block overflow-hidden aspect-video bg-gray-100 dark:bg-gray-800 mb-4">
+                <img [src]="article.imageUrl ? 'http://127.0.0.1:3000' + article.imageUrl : '/assets/placeholder.jpg'"
+                     [alt]="article.title"
+                     class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
               </a>
 
               <div class="text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400 mb-2">
-                {{ video.date | date:'dd.MM.yyyy' }}
+                {{ article.date | date:'dd.MM.yyyy' }}
               </div>
 
               <h2 class="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 leading-tight md:leading-snug transition-colors group-hover:text-up-green line-clamp-3">
-                <a [routerLink]="['/video-article', video.id]">
-                  {{ video.title }}
+                <a [routerLink]="['/article', article.id]">
+                  {{ article.title }}
                 </a>
               </h2>
             </article>
@@ -63,13 +57,16 @@
 
       } @else {
         <div class="text-center py-12 md:py-20 border-t border-gray-200 dark:border-gray-800">
-          <p class="text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400">У цьому розділі поки немає відео.</p>
+          <p class="text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400">У цьому розділі поки немає публікацій.</p>
         </div>
       }
     </div>
 
     <aside class="lg:col-span-1 lg:pl-8 lg:border-l border-gray-200 dark:border-gray-800 pt-8 lg:pt-0 border-t lg:border-t-0">
-      <app-sidebar-right />
+      <app-sidebar-right
+        [showJudicialTruth]="currentCategorySlug() !== 'judicial_truth'"
+        [showCourtStories]="currentCategorySlug() !== 'court_stories'">
+      </app-sidebar-right>
     </aside>
 
   </div>

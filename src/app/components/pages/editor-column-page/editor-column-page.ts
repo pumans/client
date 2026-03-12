@@ -3,11 +3,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ContentService, ContentItem } from '../../../services/content.service';
 import { SimplePagination } from '../../simple-pagination/simple-pagination';
+import { SidebarRight } from '../../sidebar-right/sidebar-right';
 
 @Component({
   selector: 'app-editor-column-page',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterLink, SimplePagination],
+  imports: [CommonModule, DatePipe, RouterLink, SimplePagination, SidebarRight],
   templateUrl: './editor-column-page.html',
 })
 export class EditorColumnPage implements OnInit {

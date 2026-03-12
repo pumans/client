@@ -1,11 +1,16 @@
-<aside class="flex flex-col gap-6 md:gap-8">
+<div class="flex flex-col gap-10 md:gap-12">
 
-  <app-editor-column-widget></app-editor-column-widget>
-
-<!--  <app-popular-today-widget></app-popular-today-widget>-->
-
+  @if (showEditorColumn()) {
+    <app-editor-column-widget></app-editor-column-widget>
+  }
   <app-video-widget></app-video-widget>
 
-<!--  <app-events-calendar-widget></app-events-calendar-widget>-->
+  @if (showJudicialTruth()) {
+    <app-judicial-truth-widget></app-judicial-truth-widget>
+  }
 
-</aside>
+  @if (showCourtStories()) {
+    <app-court-stories-widget></app-court-stories-widget>
+  }
+
+</div>

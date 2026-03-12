@@ -8,8 +8,8 @@
           Правотворчість
         </h4>
         <ul class="flex flex-col gap-1.5 mb-8">
-          @for (link of lawmakingLinks; track link) {
-            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          @for (item of lawmakingLinks; track item.name) {
+            <li><a [routerLink]="item.link" class="text-[13px] hover:text-white transition-colors">{{ item.name }}</a></li>
           }
         </ul>
 
@@ -17,8 +17,8 @@
           Правовий погляд
         </h4>
         <ul class="flex flex-col gap-1.5">
-          @for (link of legalViewLinks; track link) {
-            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          @for (item of legalViewLinks; track item.name) {
+            <li><a [routerLink]="item.link" class="text-[13px] hover:text-white transition-colors">{{ item.name }}</a></li>
           }
         </ul>
       </div>
@@ -28,8 +28,8 @@
           Правова практика
         </h4>
         <ul class="flex flex-col gap-1.5 mb-8">
-          @for (link of practiceLinks; track link) {
-            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          @for (item of practiceLinks; track item.name) {
+            <li><a [routerLink]="item.link" class="text-[13px] hover:text-white transition-colors">{{ item.name }}</a></li>
           }
         </ul>
 
@@ -37,17 +37,14 @@
           Новини
         </h4>
         <ul class="flex flex-col gap-1.5">
-          @for (link of newsLinks; track link) {
-            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          @for (item of newsLinks; track item.name) {
+            <li><a [routerLink]="item.link" class="text-[13px] hover:text-white transition-colors">{{ item.name }}</a></li>
           }
         </ul>
       </div>
 
       <div>
-        <a href="#" class="block text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 mb-6 hover:text-up-green transition-colors">
-          Календар
-        </a>
-        <a href="#" class="block text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 hover:text-up-green transition-colors">
+        <a routerLink="/video/legal_dialogue" class="block text-white text-[13px] font-semibold uppercase tracking-wide border-b border-gray-600 pb-2 hover:text-up-green transition-colors">
           Відео
         </a>
       </div>
@@ -55,7 +52,7 @@
       <div class="lg:col-span-2">
         <p class="text-[12px] leading-relaxed text-gray-400">
           Використання будь-яких матеріалів, розміщених на порталі "Українське право", дозволяється за умови посилання на
-          <a href="#" class="text-white hover:text-up-green transition-colors underline decoration-gray-600 underline-offset-4">ukrainepravo.com</a>.
+          <a routerLink="/" class="text-white hover:text-up-green transition-colors underline decoration-gray-600 underline-offset-4">ukrainepravo.com</a>.
           При копіюванні матеріалів порталу "Українське право" для інтернет-видань обов'язковим є пряме та відкрите для пошукових систем гіперпосилання в першому абзаці на цитовану статтю або новину.
         </p>
       </div>
@@ -65,12 +62,12 @@
           Про Проект
         </h4>
         <ul class="flex flex-col gap-1.5 mb-6">
-          @for (link of projectLinks; track link) {
-            <li><a href="#" class="text-[13px] hover:text-white transition-colors">{{ link }}</a></li>
+          @for (item of projectLinks; track item.name) {
+            <li><a [routerLink]="item.link" class="text-[13px] hover:text-white transition-colors">{{ item.name }}</a></li>
           }
         </ul>
 
-        <a href="#" class="flex items-center gap-2 mb-8 group">
+        <a routerLink="/" class="flex items-center gap-2 mb-8 group">
           <svg class="w-6 h-6 text-[#2E86AB] group-hover:opacity-80 transition-opacity" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
           </svg>

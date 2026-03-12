@@ -1,76 +1,76 @@
-<section class="max-w-[1200px] mx-auto my-5 px-4">
-  <div class="bg-white dark:bg-gray-900 rounded-sm shadow-sm border border-gray-100 dark:border-gray-800 pb-8 transition-colors duration-300">
+<div class="px-4 py-6 md:py-8 lg:px-8 max-w-[1400px] mx-auto">
 
-    <div class="border-b-2 border-up-green px-4 md:px-6 py-4">
-      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 transition-colors duration-300">Колонка редактора</h1>
-    </div>
+  <nav class="flex items-center text-[11px] md:text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-6 md:mb-8">
+    <a routerLink="/" class="hover:text-up-green transition-colors">Головна</a>
+    <span class="mx-2">/</span>
+    <span class="text-gray-900 dark:text-gray-100">Колонка редактора</span>
+  </nav>
 
-    <div class="p-4 md:p-6">
+  <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-0">
+
+    <div class="lg:col-span-3 lg:pr-8">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 md:mb-8 uppercase">
+        Колонка редактора
+      </h1>
+
       @if (isLoading()) {
-        <div class="p-5 text-center text-gray-500 dark:text-gray-400 animate-pulse">Завантаження...</div>
+        <div class="flex justify-center items-center py-10">
+          <div class="w-8 h-8 md:w-12 md:h-12 border-4 border-gray-200 dark:border-gray-700 border-t-up-green rounded-full animate-spin"></div>
+        </div>
       }
 
       @if (!isLoading() && error()) {
-        <div class="p-5 text-center text-red-600 dark:text-red-400">{{ error() }}</div>
+        <div class="p-5 text-center text-red-600 dark:text-red-400 border-t border-gray-200 dark:border-gray-800 mt-4">{{ error() }}</div>
       }
 
       @if (!isLoading() && !error() && items().length === 0) {
-        <div class="p-5 text-center text-gray-500 dark:text-gray-400">
-          Наразі немає матеріалів у цьому розділі.
+        <div class="text-center py-12 md:py-20 border-t border-gray-200 dark:border-gray-800 mt-4">
+          <p class="text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400">Наразі немає матеріалів у цьому розділі.</p>
         </div>
       }
 
       @if (!isLoading() && !error() && items().length > 0) {
 
         @if (featuredArticle) {
-          <article class="mb-8">
-            <a [routerLink]="['/article', featuredArticle.id]" class="block group">
-              <div class="relative overflow-hidden rounded mb-4 aspect-video bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
+          <article class="group mb-8 pb-8 border-b border-gray-200 dark:border-gray-800">
+            <a [routerLink]="['/article', featuredArticle.id]" class="block">
+              <div class="relative overflow-hidden aspect-video bg-gray-100 dark:bg-gray-800 mb-4 md:mb-6">
                 <img
                   [src]="featuredArticle.imageUrl || 'assets/placeholder.jpg'"
                   [alt]="featuredArticle.title"
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
-                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 dark:from-black/95 to-transparent p-4 md:p-6">
-                  <h2 class="text-white text-xl md:text-2xl mb-2 line-clamp-2 md:line-clamp-none">
-                    {{ featuredArticle.title }}
-                  </h2>
-                  <div class="flex items-center gap-2 text-white/90 text-xs md:text-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>{{ featuredArticle['time'] ?? (featuredArticle.date | date:'HH:mm') }}</span>
-                    <span>|</span>
-                    <span>{{ featuredArticle.date | date:'dd.MM.yyyy' }}</span>
-                  </div>
-                </div>
               </div>
+
+              <div class="text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400 mb-3">
+                <span>{{ featuredArticle['time'] ?? (featuredArticle.date | date:'HH:mm') }}</span>
+                <span class="mx-2">|</span>
+                <span>{{ featuredArticle.date | date:'dd.MM.yyyy' }}</span>
+              </div>
+              <h2 class="text-2xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 leading-tight group-hover:text-up-green transition-colors">
+                {{ featuredArticle.title }}
+              </h2>
             </a>
           </article>
         }
 
         @if (row1Articles.length > 0) {
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            @for (item of row1Articles; track item.id) {
-              <article class="group">
-                <a [routerLink]="['/article', item.id]">
-                  <div class="relative overflow-hidden rounded mb-3 aspect-[4/3] bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                    <img
-                      [src]="item.imageUrl || 'assets/placeholder.jpg'"
-                      [alt]="item.title"
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+          <div class="grid grid-cols-1 md:grid-cols-2 mb-8 pb-8 border-b border-gray-200 dark:border-gray-800">
+            @for (item of row1Articles; track item.id; let index = $index) {
+              <article class="group flex flex-col pb-6 mb-6 md:pb-0 md:mb-0 border-b md:border-b-0 border-gray-200 dark:border-gray-800 last:border-b-0 last:pb-0 last:mb-0"
+                       [class.md:border-r]="index % 2 === 0"
+                       [class.md:pr-6]="index % 2 === 0"
+                       [class.md:pl-6]="index % 2 !== 0">
+                <a [routerLink]="['/article', item.id]" class="block h-full">
+                  <div class="relative overflow-hidden aspect-video bg-gray-100 dark:bg-gray-800 mb-4">
+                    <img [src]="item.imageUrl || 'assets/placeholder.jpg'" [alt]="item.title" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />
                   </div>
-                  <h3 class="text-sm md:text-base text-gray-800 dark:text-gray-200 font-medium group-hover:text-up-green dark:group-hover:text-up-green transition-colors mb-2 line-clamp-3">
+                  <div class="text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400 mb-2">
+                    {{ item.date | date:'dd.MM.yyyy' }}
+                  </div>
+                  <h3 class="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100 leading-tight group-hover:text-up-green transition-colors line-clamp-3">
                     {{ item.title }}
                   </h3>
-                  <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 transition-colors">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>{{ item['time'] ?? (item.date | date:'HH:mm') }}</span>
-                    <span class="text-gray-400 dark:text-gray-500">{{ item.date | date:'dd.MM.yyyy' }}</span>
-                  </div>
                 </a>
               </article>
             }
@@ -78,27 +78,22 @@
         }
 
         @if (row2Articles.length > 0) {
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-            @for (item of row2Articles; track item.id) {
-              <article class="group">
-                <a [routerLink]="['/article', item.id]">
-                  <div class="relative overflow-hidden rounded mb-3 aspect-[4/3] bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                    <img
-                      [src]="item.imageUrl || 'assets/placeholder.jpg'"
-                      [alt]="item.title"
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+          <div class="grid grid-cols-1 md:grid-cols-3 mb-8 pb-8 border-b border-gray-200 dark:border-gray-800">
+            @for (item of row2Articles; track item.id; let index = $index; let last = $last) {
+              <article class="group flex flex-col pb-6 mb-6 md:pb-0 md:mb-0 border-b md:border-b-0 border-gray-200 dark:border-gray-800 last:border-b-0 last:pb-0 last:mb-0"
+                       [class.md:border-r]="!last"
+                       [class.md:pr-6]="!last"
+                       [class.md:pl-6]="index > 0">
+                <a [routerLink]="['/article', item.id]" class="block h-full">
+                  <div class="relative overflow-hidden aspect-video bg-gray-100 dark:bg-gray-800 mb-4">
+                    <img [src]="item.imageUrl || 'assets/placeholder.jpg'" [alt]="item.title" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />
                   </div>
-                  <h3 class="text-sm md:text-base text-gray-800 dark:text-gray-200 font-medium group-hover:text-up-green dark:group-hover:text-up-green transition-colors mb-2 line-clamp-3">
+                  <div class="text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400 mb-2">
+                    {{ item.date | date:'dd.MM.yyyy' }}
+                  </div>
+                  <h3 class="text-base md:text-lg font-bold text-gray-900 dark:text-gray-100 leading-tight group-hover:text-up-green transition-colors line-clamp-3">
                     {{ item.title }}
                   </h3>
-                  <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 transition-colors">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>{{ item['time'] ?? (item.date | date:'HH:mm') }}</span>
-                    <span class="text-gray-400 dark:text-gray-500">{{ item.date | date:'dd.MM.yyyy' }}</span>
-                  </div>
                 </a>
               </article>
             }
@@ -106,44 +101,43 @@
         }
 
         @if (row3Articles.length > 0) {
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for (item of row3Articles; track item.id) {
-              <article class="group">
-                <a [routerLink]="['/article', item.id]">
-                  <div class="relative overflow-hidden rounded mb-3 aspect-[4/3] bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                    <img
-                      [src]="item.imageUrl || 'assets/placeholder.jpg'"
-                      [alt]="item.title"
-                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+          <div class="grid grid-cols-1 md:grid-cols-3">
+            @for (item of row3Articles; track item.id; let index = $index; let last = $last) {
+              <article class="group flex flex-col pb-6 mb-6 md:pb-0 md:mb-0 border-b md:border-b-0 border-gray-200 dark:border-gray-800 last:border-b-0 last:pb-0 last:mb-0"
+                       [class.md:border-r]="!last"
+                       [class.md:pr-6]="!last"
+                       [class.md:pl-6]="index > 0">
+                <a [routerLink]="['/article', item.id]" class="block h-full">
+                  <div class="relative overflow-hidden aspect-video bg-gray-100 dark:bg-gray-800 mb-4">
+                    <img [src]="item.imageUrl || 'assets/placeholder.jpg'" [alt]="item.title" class="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105" />
                   </div>
-                  <h3 class="text-sm md:text-base text-gray-800 dark:text-gray-200 font-medium group-hover:text-up-green dark:group-hover:text-up-green transition-colors mb-2 line-clamp-3">
+                  <div class="text-[11px] md:text-xs tracking-wide uppercase text-gray-500 dark:text-gray-400 mb-2">
+                    {{ item.date | date:'dd.MM.yyyy' }}
+                  </div>
+                  <h3 class="text-base md:text-lg font-bold text-gray-900 dark:text-gray-100 leading-tight group-hover:text-up-green transition-colors line-clamp-3">
                     {{ item.title }}
                   </h3>
-                  <div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 transition-colors">
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>{{ item['time'] ?? (item.date | date:'HH:mm') }}</span>
-                    <span class="text-gray-400 dark:text-gray-500">{{ item.date | date:'dd.MM.yyyy' }}</span>
-                  </div>
                 </a>
               </article>
             }
           </div>
         }
+
+        <div class="mt-4 md:mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <app-simple-pagination
+            [currentPage]="currentPage"
+            [visiblePages]="visiblePages"
+            [hasNextPage]="hasNextPage"
+            (pageChange)="goToPage($event)"
+          />
+        </div>
+
       }
     </div>
 
-    @if (!isLoading() && !error() && items().length > 0) {
-      <div class="mt-2 px-4 md:px-6">
-        <app-simple-pagination
-          [currentPage]="currentPage"
-          [visiblePages]="visiblePages"
-          [hasNextPage]="hasNextPage"
-          (pageChange)="goToPage($event)"
-        />
-      </div>
-    }
+    <aside class="lg:col-span-1 lg:pl-8 lg:border-l border-gray-200 dark:border-gray-800 pt-8 lg:pt-0 border-t lg:border-t-0">
+      <app-sidebar-right [showEditorColumn]="false"></app-sidebar-right>
+    </aside>
+
   </div>
-</section>
+</div>
