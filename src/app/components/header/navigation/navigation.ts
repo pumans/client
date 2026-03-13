@@ -33,10 +33,10 @@ export class Navigation {
       name: 'ПРАВОВИЙ ПОГЛЯД',
       link: '/scientific-thought',
       subItems: [
-        { name: 'ПРАВО В МИСТЕЦТВІ', link: '/scientific-thought/law_in_art' },
         { name: 'АНАЛІТИКА', link: '/scientific-thought/practice_public_prosecutor' },
         { name: 'ПРАВОВА ПОЗИЦІЯ', link: '/scientific-thought/practice_court' },
         { name: 'НАУКОВА ДУМКА', link: '/scientific-thought/lawyers-practice' },
+        { name: 'ПРАВО В МИСТЕЦТВІ', link: '/scientific-thought/law_in_art' },
       ],
     },
     {
