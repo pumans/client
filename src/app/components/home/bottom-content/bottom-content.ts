@@ -1,9 +1,31 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { NewsService } from '../../../services/news.service';
+import { ContentService } from '../../../services/content.service';
 import { forkJoin, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
+
+// Конфіг рубрик для цього блоку — легко розширювати без правки логіки
+const SECTIONS = [
+  { key: 'rozglyad',  slug: 'law-making/bill_under_consideration',           title: 'Законопроєкти на розгляді',  link: '/law-making/bill_under_consideration' },
+  { key: 'priynyati', slug: 'law-making/bill_passed_by_legislature',          title: 'Прийняті закони',            link: '/law-making/bill_passed_by_legislature' },
+  { key: 'chynni',    slug: 'law-making/bill_enacted_into_law',               title: 'Набули чинності',            link: '/law-making/bill_enacted_into_law' },
+  { key: 'pozyciya',  slug: 'scientific-thought/pravova-pozytsiya',           title: 'Правова позиція',            link: '/scientific-thought/pravova-pozytsiya' },
+  { key: 'analityka', slug: 'scientific-thought/legal_analyst',               title: 'Аналітика',                  link: '/scientific-thought/legal_analyst' },
+  { key: 'naukova',   slug: 'scientific-thought/naukova-dumka',               title: 'Наукова думка',              link: '/scientific-thought/naukova-dumka' },
+  { key: 'vydannya',  slug: 'legal_publications/ukrainian_legal_publications', title: 'Видання',                   link: '/legal_publications/ukrainian_legal_publications' },
+] as const;
+
+type SectionKey = typeof SECTIONS[number]['key'];
+
+interface BottomArticle {
+  id: number;
+  title: string;
+  imageUrl: string | null;
+  date: string;
+  categoryTitle: string;
+  categoryLink: string;
+}
 
 @Component({
   selector: 'app-bottom-content',
@@ -12,62 +34,41 @@ import { catchError } from 'rxjs/operators';
   templateUrl: './bottom-content.html',
 })
 export class BottomContentComponent implements OnInit {
-  private newsService = inject(NewsService);
+  private contentService = inject(ContentService);
 
-  // Три окремі масиви для газетного макета
-  public leftColumn = signal<any[]>([]);
-  public rightTop = signal<any[]>([]);
-  public rightBottom = signal<any[]>([]);
-  public isLoading = signal<boolean>(true);
+  leftColumn  = signal<BottomArticle[]>([]);
+  rightTop    = signal<BottomArticle[]>([]);
+  rightBottom = signal<BottomArticle[]>([]);
+  isLoading   = signal(true);
 
-  ngOnInit() {
-    const safeGet = (slug: string) =>
-      this.newsService.getArticlesByContentSlug(slug).pipe(catchError(() => of({ articles: [] })));
+  ngOnInit(): void {
+    const requests = Object.fromEntries(
+      SECTIONS.map(s => [
+        s.key,
+        this.contentService.getBySlug(s.slug, 1, 1).pipe(
+          map(res => res.articles[0] ?? null),
+          catchError(() => of(null)),
+        ),
+      ]),
+    ) as Record<SectionKey, ReturnType<typeof of>>;
 
-    forkJoin({
-      rozglyad: safeGet('law-making/bill_under_consideration'),
-      priynyati: safeGet('law-making/bill_passed_by_legislature'),
-      chynni: safeGet('law-making/bill_enacted_into_law'),
-      pozyciya: safeGet('scientific-thought/practice_court'),
-      analityka: safeGet('scientific-thought/practice_public_prosecutor'),
-      naukova: safeGet('scientific-thought/lawyers-practice'),
-      vydannya: safeGet('legal_publications/ukrainian_legal_publications'),
-    }).subscribe({
-      next: (data) => {
-        const extract = (res: any, catTitle: string, catLink: string) => {
-          if (res && res.articles && res.articles[0]) {
-            return { ...res.articles[0], categoryTitle: catTitle, categoryLink: catLink };
-          }
-          return null;
+    forkJoin(requests).subscribe({
+      next: (data: Record<SectionKey, any>) => {
+        const toItem = (key: SectionKey): BottomArticle | null => {
+          const section = SECTIONS.find(s => s.key === key)!;
+          const article = data[key];
+          if (!article) return null;
+          return { ...article, categoryTitle: section.title, categoryLink: section.link };
         };
 
-        // Лівий стовпчик: Законопроєкти, Прийняті, Набули чинності
         this.leftColumn.set(
-          [
-            extract(
-              data.rozglyad,
-              'Законопроєкти на розгляді',
-              '/law-making/bill_under_consideration',
-            ),
-            extract(data.priynyati, 'Прийняті закони', '/law-making/bill_passed_by_legislature'),
-            extract(data.chynni, 'Набули чинності', '/law-making/bill_enacted_into_law'),
-          ].filter((item) => item !== null),
+          (['rozglyad', 'priynyati', 'chynni'] as SectionKey[]).map(toItem).filter(Boolean) as BottomArticle[],
         );
-
-        // Правий верхній рядок: Правова позиція, Аналітика
         this.rightTop.set(
-          [
-            extract(data.pozyciya, 'Правова позиція', '/scientific-thought/practice_court'),
-            extract(data.analityka, 'Аналітика', '/scientific-thought/practice_public_prosecutor'),
-          ].filter((item) => item !== null),
+          (['pozyciya', 'analityka'] as SectionKey[]).map(toItem).filter(Boolean) as BottomArticle[],
         );
-
-        // Правий нижній рядок: Наукова думка, Видання
         this.rightBottom.set(
-          [
-            extract(data.naukova, 'Наукова думка', '/scientific-thought/lawyers-practice'),
-            extract(data.vydannya, 'Видання', '/legal_publications/ukrainian_legal_publications'),
-          ].filter((item) => item !== null),
+          (['naukova', 'vydannya'] as SectionKey[]).map(toItem).filter(Boolean) as BottomArticle[],
         );
 
         this.isLoading.set(false);

@@ -1,72 +1,64 @@
-import { Injectable, inject, TransferState, makeStateKey } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { TransferState, makeStateKey } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
-import { Article } from '../models/article';
+import { ApiService } from './api.service';
+import { Article, ArticleListResponse } from '../models/article';
 
-const LATEST_NEWS_KEY = makeStateKey<Article[]>('latest-news-key');
+const LATEST_NEWS_KEY = makeStateKey<Article[]>('latest-news');
 
-export interface CategoryResponse {
-  categoryName: string;
-  articles: Article[];
-}
-
-@Injectable({
-  providedIn: 'root',
-})
+/**
+ * Сервіс новин.
+ * Відповідальність: запити до /api/news/*
+ * Кешує список останніх новин між навігаціями (TransferState для SSR).
+ */
+@Injectable({ providedIn: 'root' })
 export class NewsService {
-  private http = inject(HttpClient);
+  private api = inject(ApiService);
   private transferState = inject(TransferState);
-  private apiUrl = 'http://127.0.0.1:3000/api';
-  // Змінна для зберігання новин у пам'яті
-  private cachedLatestNews: Article[] | null = null;
+  private cachedLatest: Article[] | null = null;
 
-  /**
-   * Отримує останню новину (ту саму про агресію рф)
-   */
-  getLatestNews(): Observable<Article[]> {
-    // Якщо новини вже є в пам'яті — повертаємо їх як Observable
-    if (this.cachedLatestNews) {
-      return of(this.cachedLatestNews);
+  /** Останні новини для головної сторінки */
+  getLatest(): Observable<Article[]> {
+    if (this.cachedLatest) {
+      return of(this.cachedLatest);
     }
-
     if (this.transferState.hasKey(LATEST_NEWS_KEY)) {
-      const cachedData = this.transferState.get(LATEST_NEWS_KEY, []);
-      this.transferState.remove(LATEST_NEWS_KEY); // Очищуємо стан
-      this.cachedLatestNews = cachedData; // Зберігаємо в пам'ять для майбутніх переходів!
-      return of(cachedData);
+      const data = this.transferState.get(LATEST_NEWS_KEY, []);
+      this.transferState.remove(LATEST_NEWS_KEY);
+      this.cachedLatest = data;
+      return of(data);
     }
-
-    // 3. Сценарій: Серверний рендеринг АБО перше завантаження без SSR
-    return this.http.get<Article[]>(`${this.apiUrl}/news/latest`).pipe(
+    return this.api.get<Article[]>('/news/latest').pipe(
       tap((data) => {
-        this.transferState.set(LATEST_NEWS_KEY, data); // Зберігаємо для передачі в браузер
-        this.cachedLatestNews = data; // Зберігаємо в пам'ять сервісу
+        this.transferState.set(LATEST_NEWS_KEY, data);
+        this.cachedLatest = data;
       }),
     );
   }
-  // Метод для примусового оновлення (наприклад, кнопка "Оновити")
-  refreshNews(): Observable<Article[]> {
-    this.cachedLatestNews = null;
-    return this.getLatestNews();
+
+  /** Акцентні новини (для hero-блоку) */
+  getAccent(): Observable<Article[]> {
+    return this.api.get<Article[]>('/news/accent');
   }
 
-  getArticlesByContentSlug(slug: string, page: number = 1, limit: number = 9): Observable<any> {
-    return this.http.get(`${this.apiUrl}/content?slug=${slug}&page=${page}&limit=${limit}`);
-  }
-  /**
-   * Отримує список новин для конкретного розділу (IBLOCK_SECTION_ID)
-   */
-  getNewsBySection(sectionId: number, limit: number = 2): Observable<Article[]> {
-    return this.http.get<Article[]>(`${this.apiUrl}/news/section/${sectionId}?limit=${limit}`);
+  /** Одна стаття за ID */
+  getById(id: number): Observable<Article> {
+    return this.api.get<Article>(`/news/${id}`);
   }
 
-  getArticleById(id: number): Observable<Article> {
-    // Додаємо випадковий параметр, щоб обійти кеш браузера (якщо він є)
-    return this.http.get<Article>(`${this.apiUrl}/news/${id}?t=${new Date().getTime()}`);
+  /** Статті за slug категорії з пагінацією */
+  getArticlesByContentSlug(
+    slug: string,
+    page: number = 1,
+    pageSize: number = 9,
+  ): Observable<ArticleListResponse> {
+    return this.api.get<ArticleListResponse>(
+      `/content?slug=${slug}&page=${page}&limit=${pageSize}`,
+    );
   }
 
-  // акценти
-  getAccentNews(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/news/accent`);
+  /** Скинути кеш останніх новин */
+  clearCache(): void {
+    this.cachedLatest = null;
   }
 }

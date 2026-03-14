@@ -15,7 +15,7 @@ export class HeroComponent implements OnInit {
   public featuredArticles = signal<any[]>([]);
 
   ngOnInit() {
-    this.newsService.getAccentNews().subscribe({
+    this.newsService.getAccent().subscribe({
       next: (data) => {
         this.featuredArticles.set(data);
       },

@@ -125,9 +125,9 @@
 
         <div class="mt-4 md:mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
           <app-simple-pagination
-            [currentPage]="currentPage"
-            [visiblePages]="visiblePages"
-            [hasNextPage]="hasNextPage"
+            [currentPage]="currentPage()"
+            [visiblePages]="visiblePages()"
+            [hasNextPage]="hasNextPage()"
             (pageChange)="goToPage($event)"
           />
         </div>

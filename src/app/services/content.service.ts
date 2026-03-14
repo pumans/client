@@ -1,16 +1,10 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
+import { ApiService } from './api.service';
+import { Article, ArticleListResponse } from '../models/article';
 
-export interface ContentItem {
-  id: number;
-  title: string;
-  date: string;
-  summary: string | null;
-  imageUrl: string | null;
-  /** Час у форматі HH:mm (опційно, інакше виводиться з date) */
+export interface ContentItem extends Article {
   time?: string;
-  /** Категорія (наприклад, "УКРАЇНА") */
   category?: string;
   isLive?: boolean;
   isSpecial?: boolean;
@@ -24,48 +18,52 @@ export interface LatestContentItem {
   imageUrl?: string;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+/**
+ * Сервіс контенту.
+ * Відповідальність: запити до /api/content/*
+ * Кешує списки статей за slug щоб уникнути повторних запитів при навігації "назад".
+ */
+@Injectable({ providedIn: 'root' })
 export class ContentService {
-  private http = inject(HttpClient);
-
-  // Якщо потрібне інше API‑коріння (наприклад, через proxy), змініть цю змінну.
-  private readonly apiBase = 'http://127.0.0.1:3000/api';
-
-  // Простий кеш за slug, щоб при поверненні "назад" дані не зникали
-  private cache = new Map<string, ContentItem[]>();
+  private api = inject(ApiService);
+  private cache = new Map<string, ArticleListResponse>();
 
   /**
-   * Завантажити список матеріалів для будь‑якого пункту меню.
-   * На вхід подається повний Angular‑`link`, наприклад: '/news/ukraine'.
+   * Список статей для будь-якого пункту меню.
+   * @param slug — наприклад 'news/ukraine', 'law-making', 'pravotvorchist'
    */
-  getByMenuLink(link: string): Observable<ContentItem[]> {
-    const slug = (link || '').replace(/^\/+/, '');
+  getBySlug(slug: string, page = 1, limit = 20): Observable<ArticleListResponse> {
+    const cleanSlug = slug.replace(/^\/+/, '');
+    const cacheKey = `${cleanSlug}:${page}:${limit}`;
 
-    if (this.cache.has(slug)) {
-      return of(this.cache.get(slug)!);
+    if (this.cache.has(cacheKey)) {
+      return of(this.cache.get(cacheKey)!);
     }
 
-    return this.http
-      .get<ContentItem[]>(`${this.apiBase}/content`, { params: { slug } })
-      .pipe(tap((data) => this.cache.set(slug, data)));
+    return this.api.get<ArticleListResponse>('/content', { slug: cleanSlug, page, limit }).pipe(
+      tap(data => this.cache.set(cacheKey, data)),
+    );
   }
 
   /**
-   * За потреби можна примусово оновити дані для певного пункту меню.
+   * Остання одна стаття для віджетів на сайдбарі.
+   * @param slug — наприклад 'editor_column'
    */
-  refreshByMenuLink(link: string): Observable<ContentItem[]> {
-    const slug = (link || '').replace(/^\/+/, '');
-    this.cache.delete(slug);
-    return this.getByMenuLink(link);
+  getLatestBySlug(slug: string): Observable<LatestContentItem | null> {
+    const cleanSlug = slug.replace(/^\/+/, '');
+    return this.api.get<LatestContentItem | null>('/content/latest', { slug: cleanSlug });
   }
 
-  getLatestByMenuLink(link: string): Observable<LatestContentItem | null> {
-    const slug = (link || '').replace(/^\/+/, '');
-    return this.http.get<LatestContentItem | null>(`${this.apiBase}/content/latest`, {
-      params: { slug },
-    });
+  /** Скинути кеш для конкретного slug або весь */
+  clearCache(slug?: string): void {
+    if (slug) {
+      const cleanSlug = slug.replace(/^\/+/, '');
+      // Видаляємо всі записи для цього slug (всі сторінки)
+      for (const key of this.cache.keys()) {
+        if (key.startsWith(cleanSlug)) this.cache.delete(key);
+      }
+    } else {
+      this.cache.clear();
+    }
   }
 }
-

@@ -77,7 +77,7 @@ export class ArticlePage implements OnInit {
           this.breadcrumbs = [];
           this.cdr.detectChanges(); // Повідомляємо про початок завантаження
 
-          return this.newsService.getArticleById(id);
+          return this.newsService.getById(id);
         }),
       )
       .subscribe({
@@ -115,7 +115,7 @@ export class ArticlePage implements OnInit {
 
   private loadArticle(id: number) {
     this.isLoading = true;
-    this.newsService.getArticleById(id).subscribe({
+    this.newsService.getById(id).subscribe({
       next: (data) => {
         this.article = data;
         this.isLoading = false;

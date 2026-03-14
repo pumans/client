@@ -1,27 +1,10 @@
-import {
-  Component,
-  inject,
-  OnInit,
-  signal,
-  computed,
-  Injector,
-  runInInjectionContext,
-} from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, DatePipe } from '@angular/common';
-import {
-  debounceTime,
-  switchMap,
-  tap,
-  catchError,
-  of,
-  combineLatest,
-  distinctUntilChanged,
-  map,
-} from 'rxjs';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { switchMap, tap, catchError, of, distinctUntilChanged, map } from 'rxjs';
 
-import { NewsService } from '../../../services/news.service';
+import { ContentService, ContentItem } from '../../../services/content.service';
+import { Article } from '../../../models/article';
 import { SimplePagination } from '../../simple-pagination/simple-pagination';
 import { SidebarRight } from '../../sidebar-right/sidebar-right';
 
@@ -34,96 +17,74 @@ import { SidebarRight } from '../../sidebar-right/sidebar-right';
 export class CategoryStandardComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private newsService = inject(NewsService);
-  private injector = inject(Injector);
+  private contentService = inject(ContentService);
 
-  public articles = signal<any[]>([]);
-  public loading = signal<boolean>(true);
-  public displayTitle = signal<string>('');
-  public totalItems = signal<number>(0);
+  articles = signal<Article[]>([]);
+  loading = signal(true);
+  displayTitle = signal('');
+  totalItems = signal(0);
+  currentPage = signal(1);
+  currentSlug = signal('');
 
-  public currentPage = signal<number>(1);
-  public pageSize = signal<number>(9);
-  public currentCategorySlug = signal<string>('');
+  // man_law показує 12 статей, решта — 9
+  pageSize = computed(() => (this.currentSlug() === 'man_law' ? 12 : 9));
 
-  public visiblePages = computed(() => {
+  totalPages = computed(() => Math.ceil(this.totalItems() / this.pageSize()) || 1);
+
+  hasNextPage = computed(() => this.currentPage() < this.totalPages());
+
+  visiblePages = computed(() => {
     const current = this.currentPage();
-    const total = Math.ceil(this.totalItems() / this.pageSize()) || 1;
-    let start = Math.max(1, current - 2);
-    let end = Math.min(total, current + 2);
-
-    const pages = [];
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
+    const total = this.totalPages();
+    const start = Math.max(1, current - 2);
+    const end = Math.min(total, current + 2);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   });
 
-  public hasNextPage = computed(() => {
-    return this.currentPage() * this.pageSize() < this.totalItems();
-  });
+  ngOnInit(): void {
+    this.route.queryParamMap.subscribe((params) => {
+      this.currentPage.set(Number(params.get('page')) || 1);
+    });
 
-  ngOnInit() {
-    runInInjectionContext(this.injector, () => {
-      // 1. Отримуємо повний шлях (slug) безпосередньо з сегментів URL
-      const slug$ = this.route.url.pipe(
+    this.route.url
+      .pipe(
         map((segments) => segments.map((s) => s.path).join('/')),
         distinctUntilChanged(),
-      );
-
-      this.route.queryParamMap.subscribe((params) => {
-        const page = Number(params.get('page')) || 1;
-        this.currentPage.set(page);
-      });
-
-      slug$.subscribe((fullSlug) => {
-        this.currentCategorySlug.set(fullSlug || '');
-
-        if (fullSlug === 'man_law') {
-          this.pageSize.set(12);
+        tap((slug) => {
+          this.currentSlug.set(slug);
+          this.currentPage.set(1);
+          this.loading.set(true);
+        }),
+        switchMap((slug) => {
+          if (!slug) return of(null);
+          const page = this.currentPage();
+          const size = this.pageSize();
+          return this.contentService.getBySlug(slug, page, size).pipe(
+            catchError((err: unknown) => {
+              console.error('Помилка завантаження категорії:', err);
+              return of(null);
+            }),
+          );
+        }),
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.articles.set(res.articles as Article[]);
+          this.totalItems.set(res.total);
+          if (res.categoryName) this.displayTitle.set(res.categoryName);
         } else {
-          this.pageSize.set(9);
+          this.articles.set([]);
+          this.totalItems.set(0);
         }
+        this.loading.set(false);
       });
-
-      // 2. Основний потік завантаження даних
-      combineLatest([slug$, toObservable(this.currentPage), toObservable(this.pageSize)])
-        .pipe(
-          // НОВЕ: debounceTime запобігає подвійному запиту,
-          // якщо одночасно змінюється і категорія, і параметр page
-          debounceTime(50),
-          tap(() => this.loading.set(true)),
-          switchMap(([fullSlug, page, size]) => {
-            if (!fullSlug || fullSlug === 'assets') return of(null);
-
-            return this.newsService
-              .getArticlesByContentSlug(fullSlug, page, size)
-              .pipe(catchError(() => of({ isError: true })));
-          }),
-        )
-        .subscribe((response: any) => {
-          if (!response) {
-            this.loading.set(false);
-            return;
-          }
-          if (response.isError) {
-            this.articles.set([]);
-            this.totalItems.set(0);
-          } else {
-            this.articles.set(response.articles || []);
-            this.totalItems.set(response.total || 0);
-            if (response.categoryName) this.displayTitle.set(response.categoryName);
-          }
-          this.loading.set(false);
-        });
-    });
   }
 
-  goToPage(page: number) {
+  goToPage(page: number): void {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { page: page === 1 ? null : page }, // Якщо 1 сторінка - прибираємо ?page= з URL для краси
-      queryParamsHandling: 'merge', // Зберігаємо інші параметри, якщо вони є
+      queryParams: { page: page === 1 ? null : page },
+      queryParamsHandling: 'merge',
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }

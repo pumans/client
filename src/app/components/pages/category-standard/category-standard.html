@@ -64,8 +64,8 @@
 
     <aside class="lg:col-span-1 lg:pl-8 lg:border-l border-gray-200 dark:border-gray-800 pt-8 lg:pt-0 border-t lg:border-t-0">
       <app-sidebar-right
-        [showJudicialTruth]="currentCategorySlug() !== 'judicial_truth'"
-        [showCourtStories]="currentCategorySlug() !== 'court_stories'">
+        [showJudicialTruth]="currentSlug() !== 'judicial_truth'"
+        [showCourtStories]="currentSlug() !== 'court_stories'">
       </app-sidebar-right>
     </aside>
 

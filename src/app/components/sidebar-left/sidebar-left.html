@@ -7,27 +7,23 @@
   </div>
 
   <div class="flex flex-col">
-    @for (section of sections; track section.title) {
-      @for (news of section.articles; track news.id; let isLast = $last) {
+    @for (news of articles(); track news.id) {
+      <a [routerLink]="['/article', news.id]"
+         class="group flex flex-col gap-2.5 mb-5 lg:mb-6 border-b border-gray-200 dark:border-gray-800 pb-5 lg:pb-6 last:border-0 last:pb-0 last:mb-0 transition-colors duration-300">
 
-        <a [routerLink]="['/article', news.id]"
-           class="group flex flex-col gap-2.5 mb-5 lg:mb-6 border-b border-gray-200 dark:border-gray-800 pb-5 lg:pb-6 last:border-0 last:pb-0 last:mb-0 transition-colors duration-300">
+        <div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 text-[12px] tracking-wide uppercase">
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+            <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/>
+            <path d="M13 7h-2v6l5.2 3L17 14.7l-4-2.3V7z"/>
+          </svg>
+          {{ news.date | date:'dd.MM.yyyy HH:mm' }}
+        </div>
 
-          <div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 text-[12px] tracking-wide uppercase">
-            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-              <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"/>
-              <path d="M13 7h-2v6l5.2 3L17 14.7l-4-2.3V7z"/>
-            </svg>
-            {{ news.date | date:'dd.MM.yyyy HH:mm' }}
-          </div>
+        <span class="text-[16px] md:text-[18px] lg:text-[19px] font-semibold text-gray-900 dark:text-gray-200 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug">
+          {{ news.title }}
+        </span>
 
-          <span class="text-[16px] md:text-[18px] lg:text-[19px] font-semibold text-gray-900 dark:text-gray-200 group-hover:text-up-green dark:group-hover:text-up-green transition-colors leading-snug">
-            {{ news.title }}
-          </span>
-
-        </a>
-
-      }
+      </a>
     }
   </div>
 
