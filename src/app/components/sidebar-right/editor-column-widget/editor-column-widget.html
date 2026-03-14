@@ -21,7 +21,7 @@
       >
         <div class="mt-1 flex-shrink-0 w-20 h-20 overflow-hidden bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
           <img
-            [src]="item.imageUrl ? 'http://127.0.0.1:3000' + item.imageUrl : 'assets/placeholder-person.jpg'"
+            [src]="item.imageUrl ? item.imageUrl : 'assets/placeholder-person.jpg'"
             [alt]="item.title"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
         </div>

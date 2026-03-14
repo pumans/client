@@ -23,7 +23,7 @@
 
       <a [routerLink]="['/article', article.id]" class="w-full lg:w-[60%] aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center block">
         <img
-          [src]="'http://127.0.0.1:3000' + article.image"
+          [src]="article.image"
           [alt]="article.title"
           class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
         />
@@ -34,7 +34,7 @@
 
       <div class="aspect-video relative overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
         <img
-          [src]="'http://127.0.0.1:3000' + article.image"
+          [src]="article.image"
           [alt]="article.title"
           class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
         />

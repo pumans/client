@@ -38,7 +38,7 @@
           @for (article of articles(); track article.id) {
             <article class="flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-800 text-center">
               <a [routerLink]="['/article', article.id]" class="block overflow-hidden aspect-[3/4] bg-gray-100 dark:bg-gray-800">
-                <img [src]="article.imageUrl ? 'http://127.0.0.1:3000' + article.imageUrl : '/assets/placeholder.jpg'"
+                <img [src]="article.imageUrl ? article.imageUrl : '/assets/placeholder.jpg'"
                      [alt]="article.title"
                      class="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500">
               </a>
@@ -60,7 +60,7 @@
           @for (article of articles(); track article.id) {
             <article class="flex flex-col bg-white dark:bg-gray-900 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-800">
               <a [routerLink]="['/article', article.id]" class="block overflow-hidden aspect-[4/3]">
-                <img [src]="article.imageUrl ? 'http://127.0.0.1:3000' + article.imageUrl : '/assets/placeholder.jpg'" [alt]="article.title" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                <img [src]="article.imageUrl ? article.imageUrl : '/assets/placeholder.jpg'" [alt]="article.title" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
               </a>
               <div class="p-4 md:p-5 flex flex-col flex-grow">
                 <h2 class="text-base md:text-lg lg:text-xl font-bold text-gray-800 dark:text-gray-200 leading-tight mb-3">

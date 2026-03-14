@@ -13,11 +13,11 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Proxy /api/* requests to the backend server.
- * Needed so the browser can reach the API through the Angular SSR server
+ * Proxy /api/* and /upload/* requests to the backend server.
+ * Needed so the browser can reach the API and static files through the Angular SSR server
  * (the browser cannot access http://127.0.0.1:3000 directly on remote deployments).
  */
-app.use('/api', async (req, res) => {
+async function proxyToBackend(req: express.Request, res: express.Response): Promise<void> {
   const backendUrl = `http://127.0.0.1:3000${req.originalUrl}`;
   try {
     const headers: Record<string, string> = {};
@@ -30,11 +30,15 @@ app.use('/api', async (req, res) => {
 
     res.status(response.status);
     response.headers.forEach((value, key) => res.setHeader(key, value));
-    res.send(await response.text());
+    const buffer = await response.arrayBuffer();
+    res.send(Buffer.from(buffer));
   } catch {
     res.status(502).json({ error: 'Backend unavailable' });
   }
-});
+}
+
+app.use('/api', proxyToBackend);
+app.use('/upload', proxyToBackend);
 
 /**
  * Serve static files from /browser

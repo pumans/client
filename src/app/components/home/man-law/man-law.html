@@ -15,7 +15,7 @@
          [class.lg:pl-6]="!isFirst">
 
         <div class="overflow-hidden mb-2 flex justify-center">
-          <img [src]="item.imageUrl ? 'http://127.0.0.1:3000' + item.imageUrl : '/assets/placeholder-person.jpg'"
+          <img [src]="item.imageUrl ? item.imageUrl : '/assets/placeholder-person.jpg'"
                [alt]="item.title"
                class="w-[75%] lg:w-[85%] xl:w-[75%] h-auto object-contain grayscale opacity-90 group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500">
         </div>
