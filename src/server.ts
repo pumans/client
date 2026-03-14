@@ -13,16 +13,28 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * Proxy /api/* requests to the backend server.
+ * Needed so the browser can reach the API through the Angular SSR server
+ * (the browser cannot access http://127.0.0.1:3000 directly on remote deployments).
  */
+app.use('/api', async (req, res) => {
+  const backendUrl = `http://127.0.0.1:3000${req.originalUrl}`;
+  try {
+    const headers: Record<string, string> = {};
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (typeof value === 'string') headers[key] = value;
+    }
+    headers['host'] = '127.0.0.1:3000';
+
+    const response = await fetch(backendUrl, { method: req.method, headers });
+
+    res.status(response.status);
+    response.headers.forEach((value, key) => res.setHeader(key, value));
+    res.send(await response.text());
+  } catch {
+    res.status(502).json({ error: 'Backend unavailable' });
+  }
+});
 
 /**
  * Serve static files from /browser
